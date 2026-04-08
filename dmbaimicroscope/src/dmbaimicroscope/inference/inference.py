@@ -8,7 +8,7 @@ from PIL import Image
 
 if getattr(sys,'frozen', False):
     basedir = Path(sys._MEIPASS) if hasattr(sys.'_MEIPASS') else 
-Path(sys.executable0.parent
+Path(sys.executable.parent
 else:
     basedir = Path(__file__).resolve().parent
 
