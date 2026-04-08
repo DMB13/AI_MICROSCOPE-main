@@ -41,7 +41,7 @@ D:\AI_Microscope\
 
 ## Installation & Setup
  * Clone the Repository:
-   git clone https://github.com/DMB13/AI-Microscope-main.git
+   git clone https://github.com/DMB13/AI_Microscope-main.git
 cd AI-Microscope-Workstation
 
  * Install Dependencies:
