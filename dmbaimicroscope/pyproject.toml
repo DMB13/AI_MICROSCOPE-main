@@ -4,27 +4,24 @@ bundle = "com.dmb13"
 version = "1.0.0"
 url = "https://github.com/DMB13/AI_MICROSCOPE-main"
 author = "DMB AI Research"
-author_email = "dmb@example.com"
+author_email = "devisbyaru13@gmail.com"
 license = "MIT"
+
 
 [tool.briefcase.app.dmbaimicroscope]
 formal_name = "DMB AI Microscope"
 description = "AI-powered microscope for species diagnosis at Mbeya Hospital"
 icon = "src/dmbaimicroscope/resources/icon"
 sources = ["src/dmbaimicroscope"]
+# 1. ADDING THE LICENSE HERE
 
 # THE "SHOPPING LIST" FOR THE APP
-# Includes your requirements.txt AND the libraries used in your code
+# Included Python libraries from your requirements and source code
 requires = [
-    # GUI and Logic
     "customtkinter",
     "numpy",
     "Pillow",
-    
-    # AI and Brain
     "tensorflow",
-    
-    # From your requirements.txt
     "flask==3.0.2",
     "requests==2.31.0",
     "openai==1.13.3",
@@ -33,26 +30,20 @@ requires = [
 ]
 
 [tool.briefcase.app.dmbaimicroscope.macOS]
-requires = [
-    "std-library",
-]
+requires = ["std-library"]
 
 [tool.briefcase.app.dmbaimicroscope.linux]
-requires = [
-    "tcl-tk",
-]
+# 2. Linux often needs tcl-tk at the system level
+system_requires = ["tcl-tk"]
 
 [tool.briefcase.app.dmbaimicroscope.windows]
-# CRITICAL: Ensures 'tkinter' is included in the installer
-requires = [
-    "tcl-tk",
-]
+# 3. CRITICAL: For Windows, move tcl-tk to 'system_requires' 
+# or ensure it's handled by the Briefcase template.
+system_requires = ["tcl-tk"]
 
 [tool.briefcase.app.dmbaimicroscope.windows.msi]
-# This controls the Briefcase-generated MSI behavior
 install_scope = "perMachine"
 upgrade_code = "77f3e5b1-6a4d-4e92-bc91-23924a448802"
 
-# MISSION CONTROL: The entry point we fixed earlier
 [tool.briefcase.app.dmbaimicroscope.briefcase]
 entry_point = "dmbaimicroscope.app:main"
