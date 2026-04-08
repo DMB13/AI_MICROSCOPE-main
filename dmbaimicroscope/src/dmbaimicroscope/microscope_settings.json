@@ -2,8 +2,8 @@
   "camera": {
     "index": 1,
     "resolution": [
-      1280,
-      720
+      2560,
+      1440
     ],
     "fps": 30,
     "auto_detect": true
@@ -13,7 +13,7 @@
     "contrast": 0,
     "saturation": 0,
     "sharpness": 0,
-    "gamma": 1.0000000000000002,
+    "gamma": 1.6,
     "auto_enhance": true
   },
   "focus_presets": {
@@ -25,16 +25,16 @@
   "ai_settings": {
     "confidence_threshold": 0.9900990099009901,
     "show_confidence": true,
-    "auto_save_results": true,
+    "auto_save_results": false,
     "grad_cam_enabled": true,
     "prediction_timeout": 30
   },
   "export_settings": {
-    "directory": "/home/dmb/Desktop/AI_MICROSCOPE-main/../exports",
+    "directory": "C:\\home\\dmb\\Desktop\\AI_MICROSCOPE-main\\..\\exports",
     "default_format": "pdf",
     "include_images": true,
     "include_gradcam": true,
-    "auto_export": false,
+    "auto_export": true,
     "export_interval": "daily"
   },
   "ui_settings": {
@@ -59,7 +59,7 @@
     "model_cache_enabled": true,
     "debug_mode": false,
     "log_level": "INFO",
-    "max_recent_records": 180,
+    "max_recent_records": 220,
     "backup_frequency": "weekly"
   }
 }
