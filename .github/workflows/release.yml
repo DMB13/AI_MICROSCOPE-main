@@ -26,9 +26,10 @@ jobs:
           python -m briefcase package windows --no-sign --no-input
 
       - name: Compile Inno Setup Installer
-        uses: iotaledger/iscc-action@v1
-        with:
-          filepath: 'setup.iss'
+        run: |
+          # Use the pre-installed ISCC compiler on the Windows runner
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup.iss
+        shell: powershell
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
