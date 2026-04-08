@@ -37,30 +37,35 @@ def load_model(model_path: Optional[str] = None):
     """Lazy loads the Fusion Keras model."""
     global _MODEL
     tf = _ensure_tf()
-    
+
     if _MODEL is None:
-        # Default Ubuntu pathing
-        p = model_path or str(basedir /"model" /"brst_microscope_fusion.keras")
+        # Fixed typo: changed "brst" to "best" 
+        # Added str() to ensure the path works perfectly with os.path.exists
+        p = model_path or str(basedir / "model" / "best_microscope_fusion.keras")
+        
         if not os.path.exists(p):
             raise FileNotFoundError(f"Brain file not found at {p}")
-        
+
         # We use compile=False to avoid issues with custom fusion loss functions
         _MODEL = tf.keras.models.load_model(p, compile=False)
         print(f"--- Fusion Brain Loaded Successfully ---")
     return _MODEL
 
 def load_class_indices():
-    """Loads the species mapping with Ubuntu pathing."""
+    """Loads the species mapping."""
     global _CLASS_INDICES
     if _CLASS_INDICES is None:
-        path = basedir /"model/class_indices.json"
+        # Correctly join the path using the / operator
+        path = basedir / "model" / "class_indices.json"
+        
         if path.exists():
             with open(path, 'r') as f:
                 _CLASS_INDICES = json.load(f)
         else:
+            # Fallback if the file is missing
             _CLASS_INDICES = {str(i): f"Species_{i}" for i in range(39)}
     return _CLASS_INDICES
-
+    
 def preprocess_image(image_path: str, target_size=(224, 224)):
     """Prepares image for the Fusion model."""
     img = Image.open(image_path).convert('RGB')
