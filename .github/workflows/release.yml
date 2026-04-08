@@ -27,7 +27,18 @@ jobs:
           pip install "nuitka>=2.1" zstandard ordered-set
 
       - name: Execute God Mode Nuitka Build
-        run: python -m nuitka --standalone --enable-plugin=tk-inter --collect-all=tensorflow --collect-all=keras --collect-all=customtkinter --include-data-dir=model=model --include-data-dir=inference=inference --include-data-dir=docs=docs --windows-icon-from-ico=logo.ico --output-filename="DMB-AI-MICROSCOPE" app/main_app.py
+        run: >
+          python -m nuitka --standalone 
+          --enable-plugin=tk-inter 
+          --collect-all=tensorflow 
+          --collect-all=keras 
+          --collect-all=customtkinter 
+          --include-data-dir=model=model 
+          --include-data-dir=inference=inference 
+          --include-data-dir=docs=docs 
+          --windows-icon-from-ico=logo.ico 
+          --output-filename="DMB-AI-MICROSCOPE" 
+          app/main_app.py
 
       - name: Compile Windows Installer
         run: iscc setup.iss
