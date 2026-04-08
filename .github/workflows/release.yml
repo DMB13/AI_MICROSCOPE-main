@@ -2,7 +2,7 @@ name: God Mode Build & Release
 on:
   push:
     tags:
-      - 'v*' # Triggers the build automatically when you push a tag like v1.0
+      - 'v*' # Triggers when you create a tag like v1.0, v1.1, etc.
 
 permissions:
   contents: write
@@ -24,11 +24,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install nuitka zstandard ordered-set
+          pip install "nuitka>=2.1" zstandard ordered-set
 
       - name: Execute God Mode Nuitka Build
-        run: >
-          python -m nuitka --standalone --enable-plugin=tk-inter --collect-all=tensorflow --collect-all=keras --collect-all=customtkinter --include-data-dir=model=model --include-data-dir=inference=inference --include-data-dir=docs=docs --include-data-files=app/microscope_settings.json=app/microscope_settings.json --windows-icon-from-ico=logo.ico --output-filename="DMB-AI-MICROSCOPE" app/main_app.py
+        run: python -m nuitka --standalone --enable-plugin=tk-inter --collect-all=tensorflow --collect-all=keras --collect-all=customtkinter --include-data-dir=model=model --include-data-dir=inference=inference --include-data-dir=docs=docs --windows-icon-from-ico=logo.ico --output-filename="DMB-AI-MICROSCOPE" app/main_app.py
 
       - name: Compile Windows Installer
         run: iscc setup.iss
