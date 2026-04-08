@@ -9,16 +9,7 @@ AI Microscope is an advanced diagnostic tool that uses artificial intelligence t
 ## 🚀 Quick Start
 
 ### 1. Launching the Application
-```bash
-# Navigate to project directory
-cd /home/dmb/Desktop/AI_MICROSCOPE-main
-
-# Activate virtual environment
-source venv/bin/activate
-
-# Launch the application
-python app/main_app.py
-```
+Double click the icon of DMB AI MICROSCOPE
 
 ### 2. First-Time Setup
 1. **Camera Setup**: The application will automatically detect available cameras
