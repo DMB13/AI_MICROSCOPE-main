@@ -1,3 +1,12 @@
+[tool.briefcase]
+project_name = "DMB AI Microscope"
+bundle = "com.dmb.ai"
+version = "1.0.0"
+url = "https://github.com/DMB13/AI_Microscope-main.git"
+license.file = "LICENSE"
+author = "Devis Byaru"
+author_email = "devisbyaru13@gmail.com"
+
 [tool.briefcase.app.dmbaimicroscope]
 formal_name = "DMB AI Microscope"
 description = "AI-Powered Diagnostic Assistant For Clinical Bacterial Classfication"
@@ -6,11 +15,10 @@ An advanced diagnostic tool for bacterial identification
 using artificial intelligence and computer vision.
 Developed for Mbeya Regional Referral Hospital.
 """
-sources = [
-    "src/dmbaimicroscope",
-]
+# This tells Briefcase to look in the src directory for your code
+sources = ["src/dmbaimicroscope"]
 
-# --- CRITICAL: ADD YOUR DEPENDENCIES HERE ---
+# These are the Python packages downloaded from PyPI
 requires = [
     "customtkinter",
     "tensorflow==2.16.1",
@@ -20,13 +28,18 @@ requires = [
     "opencv-python",
 ]
 
+[tool.briefcase.app.dmbaimicroscope.macOS]
+universal_build = true
+requires = []
+
+[tool.briefcase.app.dmbaimicroscope.linux]
+requires = []
+
 [tool.briefcase.app.dmbaimicroscope.windows]
-# This ensures it looks professional in the Windows taskbar
-requires = [
-    "twi-windows-autoinstaller", # Optional: helps with background tasks
-]
-# If you have an icon file named logo.ico in your root
-icon = "logo" 
+# Ensures the .exe is high-quality and includes necessary Windows support
+requires = []
+# Ensure logo.ico is in the root directory (AI_MICROSCOPE-main/logo.ico)
+icon = "logo"
 
 [tool.briefcase.app.dmbaimicroscope.windows.msi]
-# This makes it a real Windows Installer (.msi)
+# This enables the generation of a professional Windows Installer
