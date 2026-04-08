@@ -682,8 +682,8 @@ For support, contact the IT Department."""
 
 def main():
     app = MainApp()
+    app.mainloop()
     return app
     
 if __name__ == "__main__":
-    app = main()
-    app.mainloop()
+    main()
