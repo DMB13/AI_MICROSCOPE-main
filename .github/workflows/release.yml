@@ -19,14 +19,14 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Force Install Modern Nuitka
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install "nuitka>=2.1" zstandard ordered-set
           pip install -r requirements.txt
+          pip install nuitka zstandard ordered-set
 
-      - name: Execute God Mode Nuitka Build
-        run: python -m nuitka --standalone --enable-plugin=tk-inter --collect-all=tensorflow --collect-all=keras --collect-all=customtkinter --include-data-dir=model=model --include-data-dir=inference=inference --include-data-dir=docs=docs --windows-icon-from-ico=logo.ico --output-filename="DMB-AI-MICROSCOPE" app/main_app.py
+      - name: Execute Nuitka Build (No Collect-All)
+        run: python -m nuitka --standalone --enable-plugin=tk-inter --follow-imports --include-package=tensorflow --include-package=keras --include-package=customtkinter --include-data-dir=model=model --include-data-dir=inference=inference --include-data-dir=docs=docs --windows-icon-from-ico=logo.ico --output-filename="DMB-AI-MICROSCOPE" app/main_app.py
 
       - name: Compile Windows Installer
         run: iscc setup.iss
