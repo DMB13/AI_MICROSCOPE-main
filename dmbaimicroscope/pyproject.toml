@@ -17,7 +17,8 @@ Developed for Mbeya Regional Referral Hospital.
 """
 # This tells Briefcase to look in the src directory for your code
 sources = ["src/dmbaimicroscope"]
-
+# Add this line if it's missing to include your AI brain and icons
+include = ["*.keras", "*.json", "*.png", "*.ico"]
 # These are the Python packages downloaded from PyPI
 requires = [
     "tensorflow>=2.16.0,<3.0.0",
