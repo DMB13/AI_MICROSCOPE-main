@@ -6,13 +6,19 @@ from pathlib import Path
 from typing import Optional, Dict, Any, List
 from PIL import Image
 
-if getattr(sys,'frozen', False):
-    basedir = Path(sys._MEIPASS) if hasattr(sys.'_MEIPASS') else 
-Path(sys.executable.parent
+if getattr(sys, 'frozen', False):
+    # Running as a packaged MSI
+    if hasattr(sys, '_MEIPASS'):
+        basedir = Path(sys._MEIPASS)
+    else:
+        basedir = Path(sys.executable).parent
 else:
-    basedir = Path(__file__).resolve().parent
+    # Running in 'briefcase dev' mode
+    # Go up twice: from 'inference/' to 'dmbaimicroscope/'
+    basedir = Path(__file__).resolve().parent.parent
 
-sys.path.insert(0, basedir)
+# This ensures Python can find your other files in this folder
+sys.path.insert(0, str(basedir))
 
 # Global Cache
 _MODEL = None
