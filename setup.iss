@@ -1,25 +1,28 @@
 [Setup]
 AppName=DMB AI Microscope
 AppVersion=1.0
-Publisher=Devis / MRRH
+AppPublisher=Devis / MRRH
 DefaultDirName={autopf}\DMB AI Microscope
 DefaultGroupName=DMB AI Microscope
+; The setup file's icon during installation
+SetupIconFile=logo.ico
+; The icon shown in Windows Settings / Add-Remove Programs
+UninstallDisplayIcon={app}\DMB-AI-MICROSCOPE.exe
 OutputBaseFilename=DMB_AI_Microscope_Setup
 OutputDir=Output
 Compression=lzma2/ultra64
 SolidCompression=yes
-SetupIconFile=logo.ico
-UninstallDisplayIcon={app}\logo.ico
+ArchitecturesInstallIn64BitMode=x64
 
 [Files]
-; Grabs the entire compiled application and its dependencies
+; Source: Points to the folder Nuitka creates in the root directory
 Source: "main_app.dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-; Creates Start Menu and Desktop shortcuts automatically
-Name: "{autoprograms}\DMB AI Microscope"; Filename: "{app}\DMB-AI-MICROSCOPE.exe"; IconFilename: "{app}\logo.ico"
-Name: "{autodesktop}\DMB AI Microscope"; Filename: "{app}\DMB-AI-MICROSCOPE.exe"; IconFilename: "{app}\logo.ico"
+; Safer: Pointing to the .exe extracts the embedded icon automatically
+Name: "{autoprograms}\DMB AI Microscope"; Filename: "{app}\DMB-AI-MICROSCOPE.exe"; IconFilename: "{app}\DMB-AI-MICROSCOPE.exe"
+Name: "{autodesktop}\DMB AI Microscope"; Filename: "{app}\DMB-AI-MICROSCOPE.exe"; IconFilename: "{app}\DMB-AI-MICROSCOPE.exe"
 
 [Run]
-; Gives the hospital staff the option to launch immediately after installing
+; Matches your manual edit to allow immediate launch
 Filename: "{app}\DMB-AI-MICROSCOPE.exe"; Description: "{cm:LaunchProgram,DMB AI Microscope}"; Flags: nowait postinstall skipifsilent
