@@ -680,7 +680,10 @@ For support, contact the IT Department."""
             self.stop_camera()
             self.start_camera()
 
-
+def main():
+    app = mainApp()
+    return app
+    
 if __name__ == "__main__":
-    app = MainApp()
+    app = main()
     app.mainloop()
