@@ -681,7 +681,7 @@ For support, contact the IT Department."""
             self.start_camera()
 
 def main():
-    app = mainApp()
+    app = MainApp()
     return app
     
 if __name__ == "__main__":
