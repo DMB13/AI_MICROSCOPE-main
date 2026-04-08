@@ -1,36 +1,58 @@
 [tool.briefcase]
 project_name = "DMB AI Microscope"
-bundle = "com.dmb.ai"
+bundle = "com.dmb13"
 version = "1.0.0"
-url = "https://github.com/DMB13/AI_Microscope-main.git"
-author = "Devis Byaru"
-author_email = "devisbyaru13@gmail.com"
+url = "https://github.com/DMB13/AI_MICROSCOPE-main"
+author = "DMB AI Research"
+author_email = "dmb@example.com"
 license = "MIT"
 
 [tool.briefcase.app.dmbaimicroscope]
 formal_name = "DMB AI Microscope"
-description = "AI-Powered Diagnostic Assistant For Clinical Bacterial Classification"
-long_description = """
-An advanced diagnostic tool for bacterial identification 
-using artificial intelligence and computer vision.
-Developed for Mbeya Regional Referral Hospital.
-"""
-# Sources and includes merged here
+description = "AI-powered microscope for species diagnosis at Mbeya Hospital"
+icon = "src/dmbaimicroscope/resources/icon"
 sources = ["src/dmbaimicroscope"]
-include = ["model/*", "resources/*", "inference/*", "*.keras", "*.json", "*.png", "*.ico"]
 
-# Cleaned up requirements list
+# THE "SHOPPING LIST" FOR THE APP
+# Includes your requirements.txt AND the libraries used in your code
 requires = [
-    "tensorflow==2.16.1",
-    "opencv-python>=4.7.0",
-    "Pillow>=9.5.0",
-    "customtkinter>=5.2.2",
-    "numpy<2.0.0",
-    "matplotlib>=3.8.0",
-    "reportlab>=3.6.0",
-    "scikit-learn>=1.4.0"
+    # GUI and Logic
+    "customtkinter",
+    "numpy",
+    "Pillow",
+    
+    # AI and Brain
+    "tensorflow",
+    
+    # From your requirements.txt
+    "flask==3.0.2",
+    "requests==2.31.0",
+    "openai==1.13.3",
+    "python-dotenv==1.0.1",
+    "werkzeug==3.0.1",
+]
+
+[tool.briefcase.app.dmbaimicroscope.macOS]
+requires = [
+    "std-library",
+]
+
+[tool.briefcase.app.dmbaimicroscope.linux]
+requires = [
+    "tcl-tk",
 ]
 
 [tool.briefcase.app.dmbaimicroscope.windows]
-requires = []
-icon = "src/dmbaimicroscope/resources/logo"
+# CRITICAL: Ensures 'tkinter' is included in the installer
+requires = [
+    "tcl-tk",
+]
+
+[tool.briefcase.app.dmbaimicroscope.windows.msi]
+# This controls the Briefcase-generated MSI behavior
+install_scope = "perMachine"
+upgrade_code = "77f3e5b1-6a4d-4e92-bc91-23924a448802"
+
+# MISSION CONTROL: The entry point we fixed earlier
+[tool.briefcase.app.dmbaimicroscope.briefcase]
+entry_point = "dmbaimicroscope.app:main"
