@@ -2,7 +2,7 @@ name: God Mode Build & Release
 on:
   push:
     tags:
-      - 'v*'
+      - 'v*' # Triggers when you create a tag like v1.0
 
 permissions:
   contents: write
@@ -18,15 +18,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install nuitka zstandard ordered-set
+          pip install "nuitka>=2.1" zstandard ordered-set
 
-      - name: Execute Nuitka Build (No Collect-All)
-        run: python -m nuitka --standalone --enable-plugin=tk-inter --follow-imports --include-package=tensorflow --include-package=keras --include-package=customtkinter --include-data-dir=model=model --include-data-dir=inference=inference --include-data-dir=docs=docs --windows-icon-from-ico=logo.ico --output-filename="DMB-AI-MICROSCOPE" app/main_app.py
+      - name: Execute God Mode Nuitka Build
+        run: python -m nuitka --standalone --enable-plugin=tk-inter --accept-downloads --collect-all=tensorflow --collect-all=keras --collect-all=customtkinter --include-data-dir=model=model --include-data-dir=inference=inference --include-data-dir=docs=docs --windows-icon-from-ico=logo.ico --output-filename="DMB-AI-MICROSCOPE" app/main_app.py
 
       - name: Compile Windows Installer
         run: iscc setup.iss
@@ -36,5 +37,7 @@ jobs:
         with:
           files: Output/DMB_AI_Microscope_Setup.exe
           name: DMB AI Microscope Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
