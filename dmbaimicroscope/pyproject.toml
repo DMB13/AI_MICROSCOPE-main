@@ -20,6 +20,15 @@ sources = ["src/dmbaimicroscope"]
 
 # These are the Python packages downloaded from PyPI
 requires = [
+    "tensorflow>=2.16.0,<3.0.0",
+    "opencv-python>=4.7.0,<5.0.0",
+    "Pillow>=9.5.0,<11.0.0",
+    "customtkinter>=5.2.2,<6.0.0",
+    "numpy>=1.25.0,<2.0.0",
+    "matplotlib>=3.8.0,<4.0.0",
+    "reportlab>=3.6.0,<5.0.0",
+    "pytest>=7.4.0,<8.0.0",
+    "scikit-learn>=1.4.0,<2.0.0",
     "customtkinter",
     "tensorflow==2.16.1",
     "keras",
