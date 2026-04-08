@@ -5,14 +5,7 @@ version = "1.0.0"
 url = "https://github.com/DMB13/AI_Microscope-main.git"
 author = "Devis Byaru"
 author_email = "devisbyaru13@gmail.com"
-# ADD THIS LINE:
-license = "MIT" 
-
-[tool.briefcase.app.dmbaimicroscope]
-# ... the rest of your settings ...
-
-[tool.briefcase.app.dmbaimicroscope]
-# ... the rest of your settings ...
+license = "MIT"
 
 [tool.briefcase.app.dmbaimicroscope]
 formal_name = "DMB AI Microscope"
@@ -22,10 +15,11 @@ An advanced diagnostic tool for bacterial identification
 using artificial intelligence and computer vision.
 Developed for Mbeya Regional Referral Hospital.
 """
+# Sources and includes merged here
 sources = ["src/dmbaimicroscope"]
-# We ensure the app includes the model and resource subfolders
 include = ["model/*", "resources/*", "inference/*", "*.keras", "*.json", "*.png", "*.ico"]
 
+# Cleaned up requirements list
 requires = [
     "tensorflow==2.16.1",
     "opencv-python>=4.7.0",
@@ -39,4 +33,4 @@ requires = [
 
 [tool.briefcase.app.dmbaimicroscope.windows]
 requires = []
-icon = "src/dmbaimicroscope/resources/logo" # Update this path to your actual .ico location
+icon = "src/dmbaimicroscope/resources/logo"
