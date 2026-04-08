@@ -42,9 +42,9 @@ from inference import inference
 from model.db import get_db
 from model.model_config import MODEL_INPUT_SIZE
 from model import report as report_utils
-from app.settings_manager import get_settings_manager
-from app.settings_dialog import SettingsDialog
-from app.services import InferenceService, RecordService, CameraService
+from dmbaimicroscope.settings_manager import get_settings_manager
+from dmbaimicroscope.settings_dialog import SettingsDialog
+from dmbaimicroscope.services import InferenceService, RecordService, CameraService
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
