@@ -1,28 +1,38 @@
+; --- DMB AI Microscope Cloud-Ready Setup Script ---
+#define MyAppName "DMB AI Microscope"
+#define MyAppVersion "1.0.0"
+#define MyAppPublisher "DMB AI Research"
+#define MySourceDir "." 
+
 [Setup]
-AppName=DMB AI Microscope
-AppVersion=1.0
-AppPublisher=Devis / MRRH
-DefaultDirName={autopf}\DMB AI Microscope
-DefaultGroupName=DMB AI Microscope
-; The setup file's icon during installation
-SetupIconFile=logo.ico
-; The icon shown in Windows Settings / Add-Remove Programs
-UninstallDisplayIcon={app}\DMB-AI-MICROSCOPE.exe
+AppId={{DMB-AI-MICROSCOPE-MBEYA-2026}}
+AppName={#MyAppName}
+AppVersion={#MyAppVersion}
+AppPublisher={#MyAppPublisher}
+DefaultDirName={autopf}\{#MyAppName}
+DefaultGroupName={#MyAppName}
+AllowNoIcons=yes
+; GitHub Actions will look for the installer in this folder
+OutputDir=installers
 OutputBaseFilename=DMB_AI_Microscope_Setup
-OutputDir=Output
-Compression=lzma2/ultra64
+Compression=lzma
 SolidCompression=yes
-ArchitecturesInstallIn64BitMode=x64
+WizardStyle=modern
 
 [Files]
-; Source: Points to the folder Nuitka creates in the root directory
-Source: "main_app.dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+; The path is now relative to where the .iss file sits in your repo
+Source: "src\dmbaimicroscope\app.py"; DestDir: "{app}"; Flags: ignoreversion
+Source: "src\dmbaimicroscope\services.py"; DestDir: "{app}"; Flags: ignoreversion
+Source: "src\dmbaimicroscope\settings_manager.py"; DestDir: "{app}"; Flags: ignoreversion
+Source: "src\dmbaimicroscope\settings_dialog.py"; DestDir: "{app}"; Flags: ignoreversion
+Source: "src\dmbaimicroscope\__init__.py"; DestDir: "{app}"; Flags: ignoreversion
+Source: "src\dmbaimicroscope\__main__.py"; DestDir: "{app}"; Flags: ignoreversion
+
+; Copying the Brain and logic folders
+Source: "src\dmbaimicroscope\model\*"; DestDir: "{app}\model"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "src\dmbaimicroscope\inference\*"; DestDir: "{app}\inference"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "src\dmbaimicroscope\resources\*"; DestDir: "{app}\resources"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-; Safer: Pointing to the .exe extracts the embedded icon automatically
-Name: "{autoprograms}\DMB AI Microscope"; Filename: "{app}\DMB-AI-MICROSCOPE.exe"; IconFilename: "{app}\DMB-AI-MICROSCOPE.exe"
-Name: "{autodesktop}\DMB AI Microscope"; Filename: "{app}\DMB-AI-MICROSCOPE.exe"; IconFilename: "{app}\DMB-AI-MICROSCOPE.exe"
-
-[Run]
-; Matches your manual edit to allow immediate launch
-Filename: "{app}\DMB-AI-MICROSCOPE.exe"; Description: "{cm:LaunchProgram,DMB AI Microscope}"; Flags: nowait postinstall skipifsilent
+Name: "{group}\{#MyAppName}"; Filename: "{app}\app.py"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\app.py"; Tasks: desktopicon
