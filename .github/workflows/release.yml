@@ -1,4 +1,4 @@
-name: Legacy Compatible Build
+name: Briefcase Windows Release
 on:
   push:
     tags:
@@ -19,23 +19,26 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Dependencies
+      - name: Install Briefcase
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install nuitka==0.6.19 zstandard ordered-set
+          pip install briefcase
 
-      - name: Execute Legacy Nuitka Build
-        # We removed --accept-downloads and --collect-all
-        # We use --include-package which works in older versions
-        run: python -m nuitka --standalone --enable-plugin=tk-inter --include-package=tensorflow --include-package=keras --include-package=customtkinter --include-data-dir=model=model --include-data-dir=inference=inference --include-data-dir=docs=docs --windows-icon-from-ico=logo.ico --output-filename="DMB-AI-MICROSCOPE" app/main_app.py
+      - name: Build Windows App
+        # We move into the briefcase project folder first
+        run: |
+          cd dmbaimicroscope
+          briefcase create windows --no-input
+          briefcase build windows --no-input
+          briefcase package windows --no-sign --no-input
 
-      - name: Compile Windows Installer
-        run: iscc setup.iss
-
-      - name: Publish Release
+      - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@v1
         with:
-          files: Output/DMB_AI_Microscope_Setup.exe
+          # Briefcase outputs the MSI in the 'windows' folder
+          files: dmbaimicroscope/windows/*.msi
+          name: DMB AI Microscope Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
