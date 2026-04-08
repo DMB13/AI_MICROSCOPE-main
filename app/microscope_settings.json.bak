@@ -1,0 +1,65 @@
+{
+  "camera": {
+    "index": 1,
+    "resolution": [
+      1280,
+      720
+    ],
+    "fps": 30,
+    "auto_detect": true
+  },
+  "image_adjustments": {
+    "brightness": 0,
+    "contrast": 0,
+    "saturation": 0,
+    "sharpness": 0,
+    "gamma": 1.0000000000000002,
+    "auto_enhance": true
+  },
+  "focus_presets": {
+    "low": 10,
+    "mid": 50,
+    "high": 90,
+    "custom": 50
+  },
+  "ai_settings": {
+    "confidence_threshold": 0.9900990099009901,
+    "show_confidence": true,
+    "auto_save_results": true,
+    "grad_cam_enabled": true,
+    "prediction_timeout": 30
+  },
+  "export_settings": {
+    "directory": "/home/dmb/Desktop/AI_MICROSCOPE-main/../exports",
+    "default_format": "pdf",
+    "include_images": true,
+    "include_gradcam": true,
+    "auto_export": false,
+    "export_interval": "daily"
+  },
+  "ui_settings": {
+    "theme": "System",
+    "language": "English",
+    "show_tooltips": true,
+    "auto_backup": true,
+    "window_size": [
+      1366,
+      768
+    ],
+    "sidebar_width": 220
+  },
+  "clinical_settings": {
+    "patient_id_required": true,
+    "auto_timestamp": true,
+    "validate_patient_id": true,
+    "default_confidence_threshold": 0.8415841584158416,
+    "enable_audit_log": true
+  },
+  "advanced_settings": {
+    "model_cache_enabled": true,
+    "debug_mode": false,
+    "log_level": "INFO",
+    "max_recent_records": 180,
+    "backup_frequency": "weekly"
+  }
+}
