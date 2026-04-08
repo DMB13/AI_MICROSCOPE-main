@@ -5,18 +5,15 @@
 ### Q: How do I install the AI Microscope?
 **A:** 
 ```bash
-# 1. Navigate to the project directory
-cd /path/to/AI_MICROSCOPE-main
+Step 1: System Preparation
+download the setup file from https://github.com/DMB13/AI_Microscope-main.git
 
-# 2. Create and activate virtual environment
-python3 -m venv venv
-source venv/bin/activate
+Step 2: Application Setup
+# run the setup file as administrator
+# follow onscreen instructions to install the application
 
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Launch the application
-python app/main_app.py
+step 3. Launch the application
+#doublo click the instaled app
 ```
 
 ### Q: What are the system requirements?
@@ -29,7 +26,7 @@ python app/main_app.py
 - **Display**: 1024x768 minimum resolution
 
 ### Q: Does it work on Windows/Mac?
-**A:** Currently optimized for Ubuntu Linux. Windows and Mac support may be added in future versions.
+**A:** Currently optimized for Windows. Linux and Mac support may be added in future versions.
 
 ---
 
