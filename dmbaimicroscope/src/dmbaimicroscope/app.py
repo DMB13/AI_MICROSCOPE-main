@@ -1,14 +1,28 @@
 import os
-import threading
+import sys
 from pathlib import Path
+
+# --- BRIEFCASE COMPATIBLE PATH LOGIC ---
+if getattr(sys, 'frozen', False):
+    # Running as a bundled App
+    basedir = Path(sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.dirname(sys.executable))
+else:
+    # Running in 'briefcase dev'
+    basedir = Path(__file__).resolve().parent
+
+# Make sure Python can see the 'inference', 'model', and 'app' folders
+sys.path.insert(0, str(basedir))
+# ---------------------------------------
+
+import threading
 from PIL import Image
 import customtkinter as ctk
+# ... (rest of your imports)
 from tkinter import filedialog, messagebox
 import cv2
 import time
 import datetime
 import json
-import sys
 
 if getattr(sys,'frozen', False):
     basedir = os.path.dirname(sys.executable)

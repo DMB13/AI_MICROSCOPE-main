@@ -1,8 +1,7 @@
-# This project was generated with 0.4.1 using template: https://github.com/beeware/briefcase-template @ v0.4.1
 [tool.briefcase]
 project_name = "DMB AI Microscope"
 bundle = "com.dmb.ai"
-version = "0.0.1"
+version = "1.0.0"
 url = "https://github.com/DMB13/AI_Microscope-main.git"
 license.file = "LICENSE"
 author = "Devis Byaru"
@@ -11,93 +10,45 @@ author_email = "devisbyaru13@gmail.com"
 [tool.briefcase.app.dmbaimicroscope]
 formal_name = "DMB AI Microscope"
 description = "AI-Powered Diagnostic Assistant For Clinical Bacterial Classfication"
-long_description = """More details about the app should go here.
+long_description = """
+An advanced diagnostic tool for bacterial identification 
+using artificial intelligence and computer vision.
+Developed for Mbeya Regional Referral Hospital.
 """
-sources = [
-    "src/dmbaimicroscope",
-]
-test_sources = [
-    "tests",
-]
+# This tells Briefcase to look in the src directory for your code
+sources = ["src/dmbaimicroscope"]
 
+# These are the Python packages downloaded from PyPI
 requires = [
-    # Add your cross-platform app requirements here
-]
-test_requires = [
-    # Add your cross-platform test requirements here
+    "tensorflow>=2.16.0,<3.0.0",
+    "opencv-python>=4.7.0,<5.0.0",
+    "Pillow>=9.5.0,<11.0.0",
+    "customtkinter>=5.2.2,<6.0.0",
+    "numpy>=1.25.0,<2.0.0",
+    "matplotlib>=3.8.0,<4.0.0",
+    "reportlab>=3.6.0,<5.0.0",
+    "pytest>=7.4.0,<8.0.0",
+    "scikit-learn>=1.4.0,<2.0.0",
+    "customtkinter",
+    "tensorflow==2.16.1",
+    "keras",
+    "numpy",
+    "pillow",
+    "opencv-python",
 ]
 
 [tool.briefcase.app.dmbaimicroscope.macOS]
 universal_build = true
-requires = [
-    # Add your macOS-specific app requirements here
-]
+requires = []
 
 [tool.briefcase.app.dmbaimicroscope.linux]
-requires = [
-    # Add your Linux-specific app requirements here
-]
-
-[tool.briefcase.app.dmbaimicroscope.linux.system.debian]
-system_requires = [
-    # Add any system packages needed at build the app here
-]
-
-system_runtime_requires = [
-    # Add any system packages needed at runtime here
-]
-
-[tool.briefcase.app.dmbaimicroscope.linux.system.rhel]
-system_requires = [
-    # Add any system packages needed at build the app here
-]
-
-system_runtime_requires = [
-    # Add any system packages needed at runtime here
-]
-
-[tool.briefcase.app.dmbaimicroscope.linux.system.suse]
-system_requires = [
-    # Add any system packages needed at build the app here
-]
-
-system_runtime_requires = [
-    # Add any system packages needed at runtime here
-]
-
-[tool.briefcase.app.dmbaimicroscope.linux.system.arch]
-system_requires = [
-    # Add any system packages needed at build the app here
-]
-
-system_runtime_requires = [
-    # Add any system packages needed at runtime here
-]
-
-[tool.briefcase.app.dmbaimicroscope.linux.flatpak]
-flatpak_runtime = "org.freedesktop.Platform"
-flatpak_runtime_version = "25.08"
-flatpak_sdk = "org.freedesktop.Sdk"
+requires = []
 
 [tool.briefcase.app.dmbaimicroscope.windows]
-requires = [
-    # Add your Windows-specific app requirements here
-]
+# Ensures the .exe is high-quality and includes necessary Windows support
+requires = []
+# Ensure logo.ico is in the root directory (AI_MICROSCOPE-main/logo.ico)
+icon = "logo"
 
-# Mobile deployments
-[tool.briefcase.app.dmbaimicroscope.iOS]
-requires = [
-    # Add your iOS-specific app requirements here
-]
-
-[tool.briefcase.app.dmbaimicroscope.android]
-requires = [
-    # Add your Android-specific app requirements here
-]
-
-# Web deployments
-[tool.briefcase.app.dmbaimicroscope.web]
-requires = [
-    # Add your web-specific app requirements here
-]
-
+[tool.briefcase.app.dmbaimicroscope.windows.msi]
+# This enables the generation of a professional Windows Installer
