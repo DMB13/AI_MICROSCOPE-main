@@ -3,53 +3,32 @@ project_name = "DMB AI Microscope"
 bundle = "com.dmb.ai"
 version = "1.0.0"
 url = "https://github.com/DMB13/AI_Microscope-main.git"
-license.file = "LICENSE"
 author = "Devis Byaru"
 author_email = "devisbyaru13@gmail.com"
 
 [tool.briefcase.app.dmbaimicroscope]
 formal_name = "DMB AI Microscope"
-description = "AI-Powered Diagnostic Assistant For Clinical Bacterial Classfication"
+description = "AI-Powered Diagnostic Assistant For Clinical Bacterial Classification"
 long_description = """
 An advanced diagnostic tool for bacterial identification 
 using artificial intelligence and computer vision.
 Developed for Mbeya Regional Referral Hospital.
 """
-# This tells Briefcase to look in the src directory for your code
 sources = ["src/dmbaimicroscope"]
-# Add this line if it's missing to include your AI brain and icons
-include = ["*.keras", "*.json", "*.png", "*.ico"]
-# These are the Python packages downloaded from PyPI
+# We ensure the app includes the model and resource subfolders
+include = ["model/*", "resources/*", "inference/*", "*.keras", "*.json", "*.png", "*.ico"]
+
 requires = [
-    "tensorflow>=2.16.0,<3.0.0",
-    "opencv-python>=4.7.0,<5.0.0",
-    "Pillow>=9.5.0,<11.0.0",
-    "customtkinter>=5.2.2,<6.0.0",
-    "numpy>=1.25.0,<2.0.0",
-    "matplotlib>=3.8.0,<4.0.0",
-    "reportlab>=3.6.0,<5.0.0",
-    "pytest>=7.4.0,<8.0.0",
-    "scikit-learn>=1.4.0,<2.0.0",
-    "customtkinter",
     "tensorflow==2.16.1",
-    "keras",
-    "numpy",
-    "pillow",
-    "opencv-python",
+    "opencv-python>=4.7.0",
+    "Pillow>=9.5.0",
+    "customtkinter>=5.2.2",
+    "numpy<2.0.0",
+    "matplotlib>=3.8.0",
+    "reportlab>=3.6.0",
+    "scikit-learn>=1.4.0"
 ]
 
-[tool.briefcase.app.dmbaimicroscope.macOS]
-universal_build = true
-requires = []
-
-[tool.briefcase.app.dmbaimicroscope.linux]
-requires = []
-
 [tool.briefcase.app.dmbaimicroscope.windows]
-# Ensures the .exe is high-quality and includes necessary Windows support
 requires = []
-# Ensure logo.ico is in the root directory (AI_MICROSCOPE-main/logo.ico)
-icon = "logo"
-
-[tool.briefcase.app.dmbaimicroscope.windows.msi]
-# This enables the generation of a professional Windows Installer
+icon = "src/dmbaimicroscope/resources/logo" # Update this path to your actual .ico location
