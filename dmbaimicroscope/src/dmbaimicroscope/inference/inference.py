@@ -7,11 +7,11 @@ from typing import Optional, Dict, Any, List
 from PIL import Image
 
 if getattr(sys,'frozen', False):
-    basedir = os.path.dirname(sys.executable)
+    basedir = Path(sys._MEIPASS) if hasattr(sys.'_MEIPASS') else 
+Path(sys.executable0.parent
 else:
-    basedir = os.path.dirname(os.path.abspath(__file__))
+    basedir = Path(__file__).resolve().parent
 
-os.chdir(basedir)
 sys.path.insert(0, basedir)
 
 # Global Cache
@@ -34,7 +34,7 @@ def load_model(model_path: Optional[str] = None):
     
     if _MODEL is None:
         # Default Ubuntu pathing
-        p = model_path or "model/best_microscope_fusion.keras"
+        p = model_path or str(basedir /"model" /"brst_microscope_fusion.keras")
         if not os.path.exists(p):
             raise FileNotFoundError(f"Brain file not found at {p}")
         
@@ -47,7 +47,7 @@ def load_class_indices():
     """Loads the species mapping with Ubuntu pathing."""
     global _CLASS_INDICES
     if _CLASS_INDICES is None:
-        path = Path("model/class_indices.json")
+        path = basedir /"model/class_indices.json"
         if path.exists():
             with open(path, 'r') as f:
                 _CLASS_INDICES = json.load(f)
