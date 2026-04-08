@@ -1,44 +1,39 @@
-name: Briefcase Windows Release
+name: Build and Release Installer
+
 on:
   push:
     tags:
-      - 'v*'
-
-permissions:
-  contents: write
+      - 'v*' # Triggers when you push a tag like v1.0.0
 
 jobs:
-  build-and-release:
+  build:
     runs-on: windows-latest
+
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Python 3.11
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.10'
 
-      - name: Install Briefcase
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install briefcase
+          pip install briefcase briefcase-windows tensorflow opencv-python Pillow
 
-      - name: Build Windows App
-        # We move into the briefcase project folder first
-        run: |
-          cd dmbaimicroscope
-          briefcase create windows --no-input
-          briefcase build windows --no-input
-          briefcase package windows --no-sign --no-input
-
-      - name: Publish to GitHub Releases
-        uses: softprops/action-gh-release@v1
+      # Optional: Use Briefcase to bundle things if needed, 
+      # but here we use Inno Setup directly on your source
+      
+      - name: Compile Installer (Inno Setup)
+        uses: iotaledger/iscc-action@v1
         with:
-          # Briefcase outputs the MSI in the 'windows' folder
-          files: dmbaimicroscope/windows/*.msi
-          name: DMB AI Microscope Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
+          filepath: 'setup.iss' # Points to your .iss file
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: installers/DMB_AI_Microscope_Setup.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
