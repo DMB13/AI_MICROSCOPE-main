@@ -1,0 +1,44 @@
+name: God Mode Build & Release
+on:
+  push:
+    tags:
+      - 'v*' # Triggers the build automatically when you push a tag like v1.0
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install nuitka zstandard ordered-set
+
+      - name: Execute God Mode Nuitka Build
+        run: >
+          python -m nuitka --standalone --enable-plugin=tk-inter --collect-all=tensorflow --collect-all=keras --collect-all=customtkinter --include-data-dir=model=model --include-data-dir=inference=inference --include-data-dir=docs=docs --include-data-files=app/microscope_settings.json=app/microscope_settings.json --windows-icon-from-ico=logo.ico --output-filename="DMB-AI-MICROSCOPE" app/main_app.py
+
+      - name: Compile Windows Installer
+        run: iscc setup.iss
+
+      - name: Publish to GitHub Releases
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Output/DMB_AI_Microscope_Setup.exe
+          name: DMB AI Microscope Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
