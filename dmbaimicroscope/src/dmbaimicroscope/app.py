@@ -2,12 +2,12 @@ import os
 import sys
 from pathlib import Path
 
-# Hack to force Briefcase Windows to find our smuggled Tkinter files
 if sys.platform == 'win32':
-    app_dir = Path(__file__).parent.parent.parent
-    os.environ['TCL_LIBRARY'] = str(app_dir / 'tcl' / 'tcl8.6')
-    os.environ['TK_LIBRARY'] = str(app_dir / 'tcl' / 'tk8.6')
-
+    # This points to the 'app' directory inside the Briefcase build
+    base_path = Path(sys.executable).parent 
+    os.environ['TCL_LIBRARY'] = str(base_path / "lib" / "tcl8.6")
+    os.environ['TK_LIBRARY'] = str(base_path / "lib" / "tk8.6")
+    
 # --- BRIEFCASE COMPATIBLE PATH LOGIC ---
 if getattr(sys, 'frozen', False):
     # Running as a bundled App
