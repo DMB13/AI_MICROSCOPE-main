@@ -23,7 +23,7 @@ requires = [
     "Pillow",
     "tensorflow",
     "flask==3.0.2",
-    "opencv-python-headless"
+    "opencv-python-headless",
     "requests==2.31.0",
     "openai==1.13.3",
     "python-dotenv==1.0.1",
