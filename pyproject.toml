@@ -1,0 +1,73 @@
+[tool.briefcase]
+project_name = "DMB_AI_Microscope"
+bundle = "com.dmb"
+formal_name = "DMB AI Microscope"
+description = "AI-powered bacterial identification microscope application"
+url = "https://github.com/dmb/ai-microscope"
+license = "LicenseRef-Proprietary"
+license-files = []
+author = "DMB"
+author_email = "contact@dmb.com"
+version = "1.0.0"
+
+[tool.briefcase.app.dmb_ai_microscope]
+formal_name = "DMB AI Microscope"
+description = "AI-powered bacterial identification microscope application"
+long_description = """DMB AI Microscope is a clinical-grade application for identifying bacterial species from microscope images using advanced AI technology."""
+icon = "logo"
+sources = ["app"]
+sources_prelude = "import sys; sys.path.insert(0, 'app')"
+requires = [
+    "customtkinter>=5.2.0",
+    "tensorflow>=2.18.0",
+    "keras>=3.0.0",
+    "opencv-python>=4.8.0",
+    "pillow>=10.0.0",
+    "numpy>=2.0.0",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    "reportlab>=4.0.0",
+    "matplotlib>=3.8.0",
+]
+
+[tool.briefcase.app.dmb_ai_microscope.windows]
+requires = [
+    "customtkinter>=5.2.0",
+    "tensorflow>=2.18.0",
+    "keras>=3.0.0",
+    "opencv-python>=4.8.0",
+    "pillow>=10.0.0",
+    "numpy>=2.0.0",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    "reportlab>=4.0.0",
+    "matplotlib>=3.8.0",
+]
+
+[tool.briefcase.app.dmb_ai_microscope.macOS]
+requires = [
+    "customtkinter>=5.2.0",
+    "tensorflow>=2.18.0",
+    "keras>=3.0.0",
+    "opencv-python>=4.8.0",
+    "pillow>=10.0.0",
+    "numpy>=2.0.0",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    "reportlab>=4.0.0",
+    "matplotlib>=3.8.0",
+]
+
+[tool.briefcase.app.dmb_ai_microscope.linux]
+requires = [
+    "customtkinter>=5.2.0",
+    "tensorflow>=2.18.0",
+    "keras>=3.0.0",
+    "opencv-python>=4.8.0",
+    "pillow>=10.0.0",
+    "numpy>=2.0.0",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    "reportlab>=4.0.0",
+    "matplotlib>=3.8.0",
+]

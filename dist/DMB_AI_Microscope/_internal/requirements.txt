@@ -1,0 +1,134 @@
+# AI_MICROSCOPE - Clinical Bacterial Identification System
+# Updated for TensorFlow 2.18.1 with Keras 3.x compatibility
+# Optimized for Python 3.11 on local machines with retrained model support
+# Compatible with Windows 10/11 for clinical deployment
+
+# ==========================================
+# CORE DEPENDENCIES (Required for operation)
+# ==========================================
+
+# Deep Learning Framework - TensorFlow 2.x with GPU support
+# Updated to TensorFlow 2.18.1 for Keras 3.x compatibility with retrained models
+# Note: For GPU support, install tensorflow[and-cuda] instead of tensorflow
+tensorflow>=2.18.0,<2.19.0
+# Alternative for GPU support: tensorflow[and-cuda]>=2.18.0,<2.19.0
+
+# Computer Vision and Image Processing
+opencv-python>=4.8.0,<5.0.0
+Pillow>=10.0.0,<11.0.0
+
+# Modern GUI Framework
+customtkinter>=5.2.0,<6.0.0
+
+# Scientific Computing and Data Processing
+# Updated to NumPy 2.0.2 for TensorFlow 2.18.1 compatibility
+numpy>=2.0.0,<2.1.0
+matplotlib>=3.7.0,<4.0.0
+
+# PDF Generation for Clinical Reports
+reportlab>=4.0.0,<5.0.0
+
+# Data Encryption for clinical data protection
+cryptography>=41.0.0,<42.0.0
+
+# ==========================================
+# SYSTEM INTEGRATION (Essential for clinical workflow)
+# ==========================================
+
+# Path and file operations (built-in modules listed for reference)
+# Note: These are built-in Python 3.11 modules - no installation needed:
+# - sqlite3 (clinical database)
+# - json (settings management)
+# - logging (system logging)
+# - datetime (timestamps)
+# - pathlib (cross-platform paths)
+# - threading (concurrent operations)
+# - tkinter (GUI foundation)
+# - csv (data export)
+# - typing (type hints)
+
+# ==========================================
+# ENHANCED FUNCTIONALITY (Recommended for clinical use)
+# ==========================================
+
+# Advanced image processing for microscope images
+scikit-image>=0.21.0,<1.0.0
+
+# Scientific functions for image analysis
+scipy>=1.11.0,<2.0.0
+
+# Machine learning utilities (used by training scripts)
+scikit-learn>=1.3.0,<2.0.0
+
+# System monitoring for clinical deployment
+psutil>=5.9.0,<6.0.0
+
+# ==========================================
+# DEVELOPMENT AND TESTING (Optional)
+# ==========================================
+
+# Testing framework
+pytest>=7.4.0,<8.0.0
+
+# Code quality tools (for development)
+black>=23.0.0,<24.0.0
+flake8>=6.0.0,<7.0.0
+
+# ==========================================
+# INSTALLATION INSTRUCTIONS
+# ==========================================
+
+# Standard installation (CPU only):
+# pip install -r requirements.txt
+
+# GPU installation (recommended for clinical deployment):
+# pip install tensorflow[and-cuda]==2.18.1
+# pip install -r requirements.txt
+
+# Development installation:
+# pip install -r requirements.txt
+# pip install black flake8 pytest
+
+# ==========================================
+# PYTHON 3.11 COMPATIBILITY NOTES
+# ==========================================
+
+# - TensorFlow 2.18.1 with Keras 3.x fully supports Python 3.11
+# - Updated NumPy 2.0.2 for TensorFlow 2.18.1 compatibility
+# - OpenCV 4.8+ includes Windows 11 compatibility fixes
+# - CustomTkinter 5.2+ optimized for modern Python
+# - Keras 3.x provides better model compatibility across environments
+# - All packages tested on Windows 10/11 with Python 3.11.5+
+
+# ==========================================
+# CLINICAL DEPLOYMENT REQUIREMENTS
+# ==========================================
+
+# Minimum system requirements for clinical use:
+# - Python 3.11.0 or higher
+# - 8GB RAM (16GB recommended for 1.8GB model)
+# - GPU with 4GB+ VRAM (optional but recommended)
+# - 10GB free disk space
+# - Windows 10/11 (64-bit)
+
+# Note: The following are built-in Python 3.11 modules (no installation needed):
+# - sqlite3 (database)
+# - json (configuration)
+# - logging (debugging)
+# - datetime (timestamps)
+# - pathlib (file operations)
+# - threading (concurrency)
+# - tkinter (GUI - customtkinter dependency)
+# - csv (data export)
+# - io (file handling)
+# - typing (type hints)
+
+# Optional packages for enhanced functionality (uncomment as needed):
+# tensorflow-lite-runtime>=2.13.0  # For edge deployment (Windows compatibility issues)
+# onnx>=1.14.0  # For model format conversion
+# scikit-image>=0.20.0  # For advanced image filters
+# scipy>=1.10.0  # For scientific functions
+# psutil>=5.9.0  # For system monitoring
+# memory-profiler>=0.60.0  # For memory analysis
+# black>=23.0.0  # For code formatting
+# flake8>=6.0.0  # For code linting

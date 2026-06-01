@@ -1,0 +1,52 @@
+{
+  "admin": {
+    "username": "admin",
+    "password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "role": "admin",
+    "full_name": "System Administrator",
+    "email": "",
+    "department": "",
+    "employee_id": "",
+    "created_at": "2026-05-15T06:01:22.860230",
+    "last_login": "2026-05-28T02:51:57.855564",
+    "is_active": true,
+    "certification_status": "pending",
+    "certification_date": null,
+    "certification_expiry": null,
+    "last_training_date": null,
+    "allowed_operations": [
+      "diagnosis",
+      "view_records"
+    ],
+    "signature_image_path": null,
+    "session_timeout_minutes": 30,
+    "failed_login_attempts": 0,
+    "last_password_change": "2026-05-25T04:11:39.833981",
+    "password_history": []
+  },
+  "technician": {
+    "username": "technician",
+    "password_hash": "3ac40463b419a7de590185c7121f0bfbe411d6168699e8014f521b050b1d6653",
+    "role": "technician",
+    "full_name": "Lab Technician",
+    "email": "",
+    "department": "",
+    "employee_id": "",
+    "created_at": "2026-05-15T06:01:22.909161",
+    "last_login": null,
+    "is_active": true,
+    "certification_status": "pending",
+    "certification_date": null,
+    "certification_expiry": null,
+    "last_training_date": null,
+    "allowed_operations": [
+      "diagnosis",
+      "view_records"
+    ],
+    "signature_image_path": null,
+    "session_timeout_minutes": 30,
+    "failed_login_attempts": 0,
+    "last_password_change": "2026-05-25T04:11:39.856306",
+    "password_history": []
+  }
+}
