@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Microscope - Project Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --danger-color: #f56565;
+            --dark-bg: #1a202c;
+            --light-bg: #f7fafc;
+            --card-bg: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .navbar {
+            background: rgba(26, 32, 44, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.8em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-info {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .info-value {
+            color: var(--text-secondary);
+        }
+
+        .progress-section {
+            margin-top: 2rem;
+        }
+
+        .progress-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s;
+        }
+
+        .language-chart {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .language-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .language-name {
+            width: 80px;
+            font-weight: 500;
+        }
+
+        .language-bar {
+            flex: 1;
+            height: 25px;
+            background: var(--border-color);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .language-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .html-fill {
+            background: linear-gradient(90deg, #e34c26, #ff6b42);
+            width: 78.1%;
+        }
+
+        .tex-fill {
+            background: linear-gradient(90deg, #3d6117, #6aa84f);
+            width: 18.1%;
+        }
+
+        .python-fill {
+            background: linear-gradient(90deg, #366994, #3776ab);
+            width: 3.8%;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-box {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.3s;
+        }
+
+        .feature-box:hover {
+            transform: translateX(5px);
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .feature-desc {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-bg);
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            padding-left: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+
+        .timeline-item:last-child::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 20px;
+            width: 2px;
+            height: calc(100% - 20px);
+            background: var(--border-color);
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-content {
+            color: var(--text-secondary);
+        }
+
+        .footer {
+            background: rgba(26, 32, 44, 0.95);
+            color: #cbd5e0;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .navbar-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">
+                🔬 AI Microscope
+            </div>
+            <ul class="nav-links">
+                <li><a onclick="scrollToSection('overview')">Overview</a></li>
+                <li><a onclick="scrollToSection('features')">Features</a></li>
+                <li><a onclick="scrollToSection('progress')">Progress</a></li>
+                <li><a onclick="scrollToSection('roadmap')">Roadmap</a></li>
+                <li><a href="https://github.com/DMB13/AI_MICROSCOPE-main" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero" id="overview">
+            <h1>🔬 AI Microscope Project</h1>
+            <p>Advanced visualization and analysis platform powered by artificial intelligence</p>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value">78.1%</div>
+                    <div class="stat-label">HTML</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">18.1%</div>
+                    <div class="stat-label">TeX</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3.8%</div>
+                    <div class="stat-label">Python</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">220K</div>
+                    <div class="stat-label">Repository Size</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Project Overview Card -->
+            <div class="card">
+                <h2>📋 Project Overview</h2>
+                <div class="project-info">
+                    <div class="info-row">
+                        <span class="info-label">Repository:</span>
+                        <span class="info-value">DMB13/AI_MICROSCOPE-main</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Repository ID:</span>
+                        <span class="info-value">1202774098</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Status:</span>
+                        <span class="info-value" style="color: var(--success-color);">🟢 Active</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Visibility:</span>
+                        <span class="info-value">Public</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Created:</span>
+                        <span class="info-value">56 days ago</span>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <a href="https://github.com/DMB13/AI_MICROSCOPE-main" target="_blank" class="btn btn-primary">
+                        📍 Visit Repository
+                    </a>
+                    <a href="https://github.com/DMB13/AI_MICROSCOPE-main/issues" target="_blank" class="btn btn-secondary">
+                        Issues
+                    </a>
+                </div>
+            </div>
+
+            <!-- Language Composition Card -->
+            <div class="card">
+                <h2>💻 Language Composition</h2>
+                <div class="language-chart">
+                    <div class="language-item">
+                        <div class="language-name">HTML</div>
+                        <div class="language-bar">
+                            <div class="language-fill html-fill">78.1%</div>
+                        </div>
+                    </div>
+                    <div class="language-item">
+                        <div class="language-name">TeX</div>
+                        <div class="language-bar">
+                            <div class="language-fill tex-fill">18.1%</div>
+                        </div>
+                    </div>
+                    <div class="language-item">
+                        <div class="language-name">Python</div>
+                        <div class="language-bar">
+                            <div class="language-fill python-fill">3.8%</div>
+                        </div>
+                    </div>
+                </div>
+                <p style="margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.9em;">
+                    Primarily a web-based project with HTML frontend, TeX documentation, and Python backend components.
+                </p>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="card" id="features">
+            <h2>✨ Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-box">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">AI-Powered Analysis</div>
+                    <div class="feature-desc">Advanced algorithms for microscopic image analysis and pattern recognition</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Data Visualization</div>
+                    <div class="feature-desc">Interactive dashboards and visual representations of analysis results</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Real-time Processing</div>
+                    <div class="feature-desc">Fast and efficient processing of large microscopic datasets</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🔐</div>
+                    <div class="feature-title">Secure & Reliable</div>
+                    <div class="feature-desc">Built with security best practices and robust error handling</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-title">Comprehensive Documentation</div>
+                    <div class="feature-desc">Detailed TeX documentation and code comments for easy understanding</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🌐</div>
+                    <div class="feature-title">Web-Based Interface</div>
+                    <div class="feature-desc">Accessible through any modern web browser, no installation required</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="card" id="progress">
+            <h2>📈 Development Progress</h2>
+            <div class="progress-section">
+                <div class="progress-item">
+                    <div class="progress-label">
+                        <span>Frontend Development</span>
+                        <span>80%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80%"></div>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label">
+                        <span>Backend Integration</span>
+                        <span>65%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%"></div>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label">
+                        <span>AI Model Training</span>
+                        <span>70%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 70%"></div>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label">
+                        <span>Documentation</span>
+                        <span>75%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%"></div>
+                    </div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label">
+                        <span>Testing & QA</span>
+                        <span>60%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 60%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Roadmap Section -->
+        <div class="card" id="roadmap">
+            <h2>🗺️ Project Roadmap</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Phase 1: Foundation (Completed)</div>
+                    <div class="timeline-content">
+                        ✓ Project setup and architecture design<br>
+                        ✓ Basic HTML structure and styling<br>
+                        ✓ Initial documentation in TeX
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Phase 2: Development (Current)</div>
+                    <div class="timeline-content">
+                        → Frontend enhancement and interactive features<br>
+                        → Python backend implementation<br>
+                        → AI model integration
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Phase 3: Optimization (Upcoming)</div>
+                    <div class="timeline-content">
+                        📋 Performance optimization<br>
+                        📋 User experience improvements<br>
+                        📋 Comprehensive testing
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Phase 4: Release (Future)</div>
+                    <div class="timeline-content">
+                        📋 Beta testing with stakeholders<br>
+                        📋 Final documentation and deployment<br>
+                        📋 Public release and support
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technologies Section -->
+        <div class="card">
+            <h2>🛠️ Technologies & Tools</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+                <div class="badge" style="display: block; text-align: center; padding: 1rem;">
+                    <strong>HTML5</strong>
+                </div>
+                <div class="badge" style="display: block; text-align: center; padding: 1rem;">
+                    <strong>CSS3</strong>
+                </div>
+                <div class="badge" style="display: block; text-align: center; padding: 1rem;">
+                    <strong>JavaScript</strong>
+                </div>
+                <div class="badge" style="display: block; text-align: center; padding: 1rem;">
+                    <strong>Python</strong>
+                </div>
+                <div class="badge" style="display: block; text-align: center; padding: 1rem;">
+                    <strong>TeX/LaTeX</strong>
+                </div>
+                <div class="badge" style="display: block; text-align: center; padding: 1rem;">
+                    <strong>Git & GitHub</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2026 AI Microscope Project | Maintained by DMB13</p>
+        <p style="font-size: 0.9em; margin-top: 1rem;">
+            <a href="https://github.com/DMB13" style="color: var(--primary-color); text-decoration: none;">GitHub Profile</a> • 
+            <a href="https://github.com/DMB13/AI_MICROSCOPE-main" style="color: var(--primary-color); text-decoration: none;">Repository</a>
+        </p>
+    </div>
+
+    <script>
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card, .feature-box').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Define animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
