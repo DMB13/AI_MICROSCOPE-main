@@ -1,4 +1,4 @@
-# AI_MICROSCOPE
+# DMB_AI_MICROSCOPE
 AI-aided microscope workstation
 
 AI-Assisted Workstation for Rapid Bacterial Species Identification
