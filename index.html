@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Microscope - Advanced Project Dashboard</title>
+    <title>AI Microscope - AI-Assisted Bacterial Identification for Clinical Labs</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -73,6 +73,7 @@
             background-color: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(5px);
             animation: fadeIn 0.3s ease;
+            overflow-y: auto;
         }
 
         .modal.active {
@@ -91,12 +92,13 @@
             border: 1px solid rgba(102, 126, 234, 0.2);
             border-radius: 20px;
             padding: 2.5rem;
-            max-width: 600px;
+            max-width: 800px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
             backdrop-filter: blur(10px);
             animation: slideIn 0.3s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
         }
 
         @keyframes slideIn {
@@ -117,6 +119,7 @@
             color: var(--text-secondary);
             cursor: pointer;
             transition: color 0.3s;
+            line-height: 1;
         }
 
         .close-modal:hover {
@@ -125,7 +128,7 @@
 
         /* Navigation */
         .navbar {
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.9);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(102, 126, 234, 0.1);
             padding: 1rem 2rem;
@@ -199,17 +202,24 @@
             padding: 2rem;
         }
 
-        /* Hero Section */
+        /* Hero Section - Background Image */
         .hero {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(102, 126, 234, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(102, 126, 234, 0.1) 100%), 
+                        url('assets/Redefining_Bacterial_Diagnostics_with_AI.png');
+            background-size: cover;
+            background-position: center;
             border: 1px solid rgba(102, 126, 234, 0.2);
             border-radius: 20px;
-            padding: 4rem 2rem;
+            padding: 6rem 2rem;
             margin-bottom: 3rem;
             text-align: center;
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .hero::before {
@@ -254,13 +264,14 @@
             font-weight: 900;
             letter-spacing: -1px;
             animation: slideInDown 0.8s ease;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .hero p {
             font-size: 1.3em;
             color: var(--text-secondary);
             margin-bottom: 2rem;
-            max-width: 600px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
             animation: slideInUp 0.8s ease 0.1s both;
@@ -288,66 +299,6 @@
             }
         }
 
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-            animation: slideInUp 0.8s ease 0.2s both;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(240, 147, 251, 0.1));
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .stat-card:hover::before {
-            left: 100%;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(102, 126, 234, 0.5);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
-        }
-
-        .stat-value {
-            font-size: 2.5em;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.95em;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
         .main-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -365,6 +316,7 @@
             position: relative;
             overflow: hidden;
             animation: slideInUp 0.8s ease forwards;
+            cursor: pointer;
         }
 
         .card:nth-child(1) { animation-delay: 0.1s; }
@@ -403,6 +355,15 @@
             font-weight: 700;
         }
 
+        .card-image {
+            width: 100%;
+            height: 250px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
         .info-row {
             display: flex;
             justify-content: space-between;
@@ -435,6 +396,7 @@
             gap: 1rem;
             margin-top: 2rem;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .btn {
@@ -492,72 +454,6 @@
             background: var(--primary);
             color: white;
             transform: translateY(-3px);
-        }
-
-        .btn-small {
-            padding: 0.6rem 1.2rem;
-            font-size: 0.9em;
-            border-radius: 8px;
-        }
-
-        /* Language Chart */
-        .language-chart {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .language-item {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .language-name {
-            width: 100px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .language-bar {
-            flex: 1;
-            height: 35px;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            position: relative;
-        }
-
-        .language-fill {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 15px;
-            color: white;
-            font-size: 0.9em;
-            font-weight: 700;
-            transition: width 0.6s ease;
-            animation: fillBar 1s ease forwards;
-        }
-
-        @keyframes fillBar {
-            from { width: 0; }
-        }
-
-        .html-fill {
-            background: linear-gradient(90deg, #e34c26, #ff6b42);
-            width: 78.1%;
-        }
-
-        .tex-fill {
-            background: linear-gradient(90deg, #3d6117, #6aa84f);
-            width: 18.1%;
-        }
-
-        .python-fill {
-            background: linear-gradient(90deg, #366994, #3776ab);
-            width: 3.8%;
         }
 
         /* Features Grid */
@@ -628,134 +524,56 @@
             line-height: 1.6;
         }
 
-        /* Progress Bars */
-        .progress-section {
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
             margin-top: 2rem;
         }
 
-        .progress-item {
-            margin-bottom: 2rem;
-            animation: slideInUp 0.8s ease forwards;
-        }
-
-        .progress-item:nth-child(1) { animation-delay: 0.1s; }
-        .progress-item:nth-child(2) { animation-delay: 0.2s; }
-        .progress-item:nth-child(3) { animation-delay: 0.3s; }
-        .progress-item:nth-child(4) { animation-delay: 0.4s; }
-        .progress-item:nth-child(5) { animation-delay: 0.5s; }
-
-        .progress-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.8rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 12px;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
+        .gallery-item {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(30, 41, 59, 0.3) 100%);
             border: 1px solid rgba(102, 126, 234, 0.2);
-            position: relative;
-            cursor: pointer;
-        }
-
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            border-radius: 10px;
-            transition: width 0.8s ease;
-            position: relative;
+            border-radius: 15px;
             overflow: hidden;
-            animation: expandWidth 1.2s ease;
-        }
-
-        @keyframes expandWidth {
-            from { width: 0 !important; }
-        }
-
-        /* Timeline */
-        .timeline {
-            position: relative;
-            padding: 2rem 0;
-            padding-left: 3rem;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 0;
-            height: 100%;
-            width: 2px;
-            background: linear-gradient(180deg, var(--primary), var(--accent), transparent);
-        }
-
-        .timeline-item {
-            padding-bottom: 2.5rem;
-            position: relative;
-            animation: slideInUp 0.8s ease forwards;
-            cursor: pointer;
-        }
-
-        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
-        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
-        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
-        .timeline-item:nth-child(4) { animation-delay: 0.4s; }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -17px;
-            top: 0;
-            width: 34px;
-            height: 34px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 50%;
-            border: 3px solid var(--dark);
-            box-shadow: 0 0 0 2px var(--primary);
             transition: all 0.3s ease;
+            cursor: pointer;
+            animation: slideInUp 0.8s ease forwards;
         }
 
-        .timeline-item:hover::before {
-            width: 44px;
-            height: 44px;
-            left: -22px;
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            border-color: rgba(102, 126, 234, 0.4);
+            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.15);
         }
 
-        .timeline-date {
+        .gallery-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.05);
+        }
+
+        .gallery-info {
+            padding: 1.5rem;
+        }
+
+        .gallery-title {
+            font-size: 1.2em;
             font-weight: 700;
             color: var(--primary);
             margin-bottom: 0.5rem;
-            font-size: 1.1em;
         }
 
-        .timeline-content {
+        .gallery-desc {
+            font-size: 0.9em;
             color: var(--text-secondary);
-            line-height: 1.8;
-            background: rgba(102, 126, 234, 0.05);
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 2px solid var(--primary);
+            line-height: 1.5;
         }
 
         /* Badges */
@@ -770,39 +588,6 @@
             margin-bottom: 0.75rem;
             border: 1px solid rgba(102, 126, 234, 0.3);
             font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .badge:hover {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(240, 147, 251, 0.3));
-            border-color: rgba(102, 126, 234, 0.5);
-            transform: scale(1.05);
-        }
-
-        /* Notifications */
-        .notification {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 1.5rem 2rem;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-            animation: slideInRight 0.3s ease;
-            z-index: 999;
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
         }
 
         /* Footer */
@@ -814,7 +599,6 @@
             text-align: center;
             padding: 3rem 2rem;
             margin-top: 4rem;
-            border-radius: 20px 20px 0 0;
         }
 
         .footer p {
@@ -824,117 +608,75 @@
         .footer a {
             color: var(--primary);
             text-decoration: none;
-            transition: color 0.3s ease;
             font-weight: 600;
         }
 
-        .footer a:hover {
-            color: var(--accent);
+        /* Image Modal */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .image-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+        }
+
+        .image-modal-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 10px;
+        }
+
+        .image-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2em;
+            cursor: pointer;
         }
 
         /* Responsive */
-        @media (max-width: 1024px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-links {
-                gap: 1rem;
-            }
-
-            .hero h1 {
-                font-size: 2.5em;
-            }
-        }
-
         @media (max-width: 768px) {
-            .hero {
-                padding: 2rem 1.5rem;
-            }
-
-            .hero h1 {
-                font-size: 2em;
-            }
-
-            .navbar-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .nav-links {
-                flex-direction: column;
-                gap: 0.5rem;
-                text-align: center;
-            }
-
-            .container {
-                padding: 1rem;
-            }
-
-            .stats-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                width: 95%;
-                padding: 1.5rem;
-            }
+            .hero { padding: 3rem 1.5rem; min-height: auto; }
+            .hero h1 { font-size: 2em; }
+            .container { padding: 1rem; }
+            .modal-content { width: 95%; }
         }
 
-        /* Scroll animations */
-        .scroll-animate {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .scroll-animate.animated {
-            animation: slideInUp 0.8s ease forwards;
-        }
-
-        /* Tooltip */
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-        }
-
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: var(--primary);
-            color: white;
+        .section-title {
+            font-size: 2.5em;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
             text-align: center;
-            border-radius: 6px;
-            padding: 0.8rem;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.9em;
-            font-weight: 500;
         }
 
-        .tooltip .tooltiptext::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: var(--primary) transparent transparent transparent;
-        }
-
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
+        .section-subtitle {
+            font-size: 1.1em;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
 </head>
@@ -948,8 +690,7 @@
             <ul class="nav-links">
                 <li><a onclick="scrollToSection('overview')">Overview</a></li>
                 <li><a onclick="scrollToSection('features')">Features</a></li>
-                <li><a onclick="scrollToSection('progress')">Progress</a></li>
-                <li><a onclick="scrollToSection('roadmap')">Roadmap</a></li>
+                <li><a onclick="scrollToSection('gallery')">Gallery</a></li>
                 <li><a href="https://github.com/DMB13/AI_MICROSCOPE-main" target="_blank">
                     <i class="fab fa-github"></i> GitHub
                 </a></li>
@@ -959,433 +700,310 @@
 
     <!-- Main Content -->
     <div class="container">
-        <!-- Hero Section -->
+        <!-- Hero Section with Background Image -->
         <div class="hero" id="overview">
             <div class="hero-content">
                 <h1>🔬 AI Microscope</h1>
-                <p>Next-generation visualization and analysis platform powered by artificial intelligence</p>
-                <div class="stats-container">
-                    <div class="stat-card" onclick="showStatDetail('HTML')">
-                        <div class="stat-value">78.1%</div>
-                        <div class="stat-label">HTML5</div>
-                    </div>
-                    <div class="stat-card" onclick="showStatDetail('TeX')">
-                        <div class="stat-value">18.1%</div>
-                        <div class="stat-label">TeX</div>
-                    </div>
-                    <div class="stat-card" onclick="showStatDetail('Python')">
-                        <div class="stat-value">3.8%</div>
-                        <div class="stat-label">Python</div>
-                    </div>
-                    <div class="stat-card" onclick="showStatDetail('Size')">
-                        <div class="stat-value">220K</div>
-                        <div class="stat-label">Size</div>
-                    </div>
+                <p>Revolutionary AI-Assisted Workstation for Rapid Bacterial Species Identification</p>
+                <p style="font-size: 1.1em; margin-top: 1rem;">Transform bacterial identification from 48-72 hours to under 5 seconds</p>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="scrollToSection('gallery')">
+                        <i class="fas fa-images"></i> View Gallery
+                    </button>
+                    <button class="btn btn-secondary" onclick="openModal('contact')">
+                        <i class="fas fa-envelope"></i> Contact Us
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Main Grid -->
+        <!-- Project Cards with Images -->
         <div class="main-grid">
-            <!-- Project Overview Card -->
-            <div class="card">
+            <div class="card" onclick="openModal('overview-modal')">
+                <img src="assets/DMB%20AI%20MICROSCOPE%20IMAGES_1.jpg" alt="System Overview" class="card-image">
                 <h2><i class="fas fa-project-diagram"></i> Project Overview</h2>
                 <div class="project-info">
                     <div class="info-row">
-                        <span class="info-label">📦 Repository:</span>
-                        <span class="info-value">DMB13/AI_MICROSCOPE-main</span>
+                        <span class="info-label">🏥 Institution:</span>
+                        <span class="info-value">Mbeya Regional Referral Hospital</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">🔑 Repo ID:</span>
-                        <span class="info-value">1202774098</span>
+                        <span class="info-label">⚡ Processing:</span>
+                        <span class="info-value">Under 5 seconds per sample</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">🟢 Status:</span>
-                        <span class="info-value" style="color: var(--success);">Active & Growing</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">🌐 Visibility:</span>
-                        <span class="info-value">Public</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">⏰ Created:</span>
-                        <span class="info-value">56 days ago</span>
-                    </div>
-                </div>
-                <div class="button-group">
-                    <a href="https://github.com/DMB13/AI_MICROSCOPE-main" target="_blank" class="btn btn-primary">
-                        <i class="fab fa-github"></i> Visit Repository
-                    </a>
-                    <button class="btn btn-secondary btn-small" onclick="copyToClipboard('DMB13/AI_MICROSCOPE-main')">
-                        <i class="fas fa-copy"></i> Copy
-                    </button>
-                </div>
-            </div>
-
-            <!-- Language Composition Card -->
-            <div class="card">
-                <h2><i class="fas fa-code"></i> Language Composition</h2>
-                <div class="language-chart">
-                    <div class="language-item">
-                        <div class="language-name">
-                            <span class="tooltip">
-                                HTML
-                                <span class="tooltiptext">Frontend markup and structure</span>
-                            </span>
-                        </div>
-                        <div class="language-bar">
-                            <div class="language-fill html-fill">78.1%</div>
-                        </div>
-                    </div>
-                    <div class="language-item">
-                        <div class="language-name">
-                            <span class="tooltip">
-                                TeX
-                                <span class="tooltiptext">Documentation and reports</span>
-                            </span>
-                        </div>
-                        <div class="language-bar">
-                            <div class="language-fill tex-fill">18.1%</div>
-                        </div>
-                    </div>
-                    <div class="language-item">
-                        <div class="language-name">
-                            <span class="tooltip">
-                                Python
-                                <span class="tooltiptext">Backend and AI logic</span>
-                            </span>
-                        </div>
-                        <div class="language-bar">
-                            <div class="language-fill python-fill">3.8%</div>
-                        </div>
+                        <span class="info-label">🎯 Impact:</span>
+                        <span class="info-value">48-72 hours → 5 seconds</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Technologies Card -->
-            <div class="card">
-                <h2><i class="fas fa-wrench"></i> Tech Stack</h2>
-                <div style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
-                    <span class="badge" onclick="showTechDetail('HTML5')"><i class="fab fa-html5"></i> HTML5</span>
-                    <span class="badge" onclick="showTechDetail('CSS3')"><i class="fab fa-css3"></i> CSS3</span>
-                    <span class="badge" onclick="showTechDetail('JavaScript')"><i class="fab fa-js"></i> JavaScript</span>
-                    <span class="badge" onclick="showTechDetail('Python')"><i class="fab fa-python"></i> Python</span>
-                    <span class="badge" onclick="showTechDetail('TensorFlow')">TensorFlow</span>
-                    <span class="badge" onclick="showTechDetail('Git')"><i class="fab fa-github"></i> Git</span>
+            <div class="card" onclick="openModal('specs')">
+                <img src="assets/DMB%20AI%20MICROSCOPE%20IMAGES_3.jpg" alt="Technical Specs" class="card-image">
+                <h2><i class="fas fa-cogs"></i> Technical Specs</h2>
+                <div class="project-info">
+                    <div class="info-row">
+                        <span class="info-label">🤖 Model:</span>
+                        <span class="info-value">EfficientNetV2M</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">📊 Species:</span>
+                        <span class="info-value">34 Bacterial Classes</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">💾 Framework:</span>
+                        <span class="info-value">TensorFlow 2.18.1 + Keras 3.x</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" onclick="openModal('performance')">
+                <img src="assets/DMB%20AI%20MICROSCOPE%20IMAGES_4.jpg" alt="Performance" class="card-image">
+                <h2><i class="fas fa-chart-line"></i> Performance</h2>
+                <div class="project-info">
+                    <div class="info-row">
+                        <span class="info-label">✅ Accuracy:</span>
+                        <span class="info-value">Industry-Leading</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">🎯 Confidence:</span>
+                        <span class="info-value">90% Minimum</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">⏱️ Parameters:</span>
+                        <span class="info-value">105.7M</span>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Features Section -->
-        <div class="card" id="features" style="margin-bottom: 3rem;">
-            <h2><i class="fas fa-star"></i> Key Features</h2>
+        <section id="features" style="margin: 4rem 0;">
+            <h2 class="section-title">✨ Key Features</h2>
+            <p class="section-subtitle">Advanced capabilities designed for clinical laboratories</p>
+            
             <div class="features-grid">
-                <div class="feature-box" onclick="showFeatureDetail('AI Analysis')">
-                    <div class="feature-icon">🎯</div>
-                    <div class="feature-title">AI-Powered Analysis</div>
-                    <div class="feature-desc">Advanced algorithms for microscopic image analysis and pattern recognition with high accuracy</div>
+                <div class="feature-box">
+                    <span class="feature-icon">📡</span>
+                    <div class="feature-title">Offline Inference</div>
+                    <div class="feature-desc">Complete system functionality without internet. Perfect for resource-constrained settings.</div>
                 </div>
-                <div class="feature-box" onclick="showFeatureDetail('Visualization')">
-                    <div class="feature-icon">📊</div>
-                    <div class="feature-title">Data Visualization</div>
-                    <div class="feature-desc">Interactive dashboards with real-time visual representations of analysis results</div>
+
+                <div class="feature-box">
+                    <span class="feature-icon">⚡</span>
+                    <div class="feature-title">High-Speed Analysis</div>
+                    <div class="feature-desc">Species identification in under 5 seconds, enabling same-day diagnosis.</div>
                 </div>
-                <div class="feature-box" onclick="showFeatureDetail('Performance')">
-                    <div class="feature-icon">⚡</div>
-                    <div class="feature-title">Real-time Processing</div>
-                    <div class="feature-desc">Lightning-fast processing of large microscopic datasets with optimized performance</div>
+
+                <div class="feature-box">
+                    <span class="feature-icon">🧠</span>
+                    <div class="feature-title">Explainable AI</div>
+                    <div class="feature-desc">Grad-CAM heatmaps show AI reasoning, building clinician trust.</div>
                 </div>
-                <div class="feature-box" onclick="showFeatureDetail('Security')">
-                    <div class="feature-icon">🔐</div>
-                    <div class="feature-title">Secure & Reliable</div>
-                    <div class="feature-desc">Built with enterprise-grade security and comprehensive error handling mechanisms</div>
+
+                <div class="feature-box">
+                    <span class="feature-icon">📋</span>
+                    <div class="feature-title">Patient Registry</div>
+                    <div class="feature-desc">Integrated SQLite database with complete audit trails.</div>
                 </div>
-                <div class="feature-box" onclick="showFeatureDetail('Documentation')">
-                    <div class="feature-icon">📚</div>
-                    <div class="feature-title">Full Documentation</div>
-                    <div class="feature-desc">Comprehensive TeX documentation and detailed code comments for easy understanding</div>
+
+                <div class="feature-box">
+                    <span class="feature-icon">🎨</span>
+                    <div class="feature-title">Modern GUI</div>
+                    <div class="feature-desc">User-friendly three-panel interface for clinical staff.</div>
                 </div>
-                <div class="feature-box" onclick="showFeatureDetail('Interface')">
-                    <div class="feature-icon">🌐</div>
-                    <div class="feature-title">Web Interface</div>
-                    <div class="feature-desc">Accessible through modern browsers with responsive design for all devices</div>
+
+                <div class="feature-box">
+                    <span class="feature-icon">🏥</span>
+                    <div class="feature-title">Clinical Safety</div>
+                    <div class="feature-desc">90% confidence threshold with decision support safeguards.</div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Progress Section -->
-        <div class="card" id="progress" style="margin-bottom: 3rem;">
-            <h2><i class="fas fa-chart-line"></i> Development Progress</h2>
-            <div class="progress-section">
-                <div class="progress-item">
-                    <div class="progress-label">
-                        <span>🎨 Frontend Development</span>
-                        <span class="tooltip">
-                            80%
-                            <span class="tooltiptext">UI/UX implementation complete</span>
-                        </span>
-                    </div>
-                    <div class="progress-bar" onclick="showProgressDetail('Frontend')">
-                        <div class="progress-fill" style="width: 80%;"></div>
+        <!-- Gallery Section -->
+        <section id="gallery" style="margin: 4rem 0;">
+            <h2 class="section-title">📸 System Gallery</h2>
+            <p class="section-subtitle">Visual showcase of AI Microscope capabilities - Click to enlarge</p>
+
+            <div class="gallery-grid">
+                <div class="gallery-item" onclick="openImageModal('assets/DMB%20AI%20MICROSCOPE%20IMAGES_5.jpg')">
+                    <img src="assets/DMB%20AI%20MICROSCOPE%20IMAGES_5.jpg" alt="System Interface" class="gallery-image">
+                    <div class="gallery-info">
+                        <div class="gallery-title">System Interface</div>
+                        <div class="gallery-desc">Modern dashboard for clinical operations</div>
                     </div>
                 </div>
-                <div class="progress-item">
-                    <div class="progress-label">
-                        <span>⚙️ Backend Integration</span>
-                        <span>65%</span>
-                    </div>
-                    <div class="progress-bar" onclick="showProgressDetail('Backend')">
-                        <div class="progress-fill" style="width: 65%;"></div>
-                    </div>
-                </div>
-                <div class="progress-item">
-                    <div class="progress-label">
-                        <span>🤖 AI Model Training</span>
-                        <span>70%</span>
-                    </div>
-                    <div class="progress-bar" onclick="showProgressDetail('AI')">
-                        <div class="progress-fill" style="width: 70%;"></div>
+
+                <div class="gallery-item" onclick="openImageModal('assets/adjusted_DMB%20AI%20MICROSCOPE%20IMAGES_5.jpg')">
+                    <img src="assets/adjusted_DMB%20AI%20MICROSCOPE%20IMAGES_5.jpg" alt="Analysis Results" class="gallery-image">
+                    <div class="gallery-info">
+                        <div class="gallery-title">Analysis Results</div>
+                        <div class="gallery-desc">AI diagnosis with confidence scores</div>
                     </div>
                 </div>
-                <div class="progress-item">
-                    <div class="progress-label">
-                        <span>📖 Documentation</span>
-                        <span>75%</span>
-                    </div>
-                    <div class="progress-bar" onclick="showProgressDetail('Documentation')">
-                        <div class="progress-fill" style="width: 75%;"></div>
-                    </div>
-                </div>
-                <div class="progress-item">
-                    <div class="progress-label">
-                        <span>✅ Testing & QA</span>
-                        <span>60%</span>
-                    </div>
-                    <div class="progress-bar" onclick="showProgressDetail('Testing')">
-                        <div class="progress-fill" style="width: 60%;"></div>
+
+                <div class="gallery-item" onclick="openImageModal('assets/Offline_AI_for_Bacterial_Identification.png')">
+                    <img src="assets/Offline_AI_for_Bacterial_Identification.png" alt="Offline Capability" class="gallery-image">
+                    <div class="gallery-info">
+                        <div class="gallery-title">Offline Capability</div>
+                        <div class="gallery-desc">Complete functionality without internet</div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Roadmap Section -->
-        <div class="card" id="roadmap" style="margin-bottom: 3rem;">
-            <h2><i class="fas fa-road"></i> Project Roadmap</h2>
-            <div class="timeline">
-                <div class="timeline-item" onclick="showPhaseDetail('Phase1')">
-                    <div class="timeline-date">✓ Phase 1: Foundation (Completed)</div>
-                    <div class="timeline-content">
-                        ✓ Project setup and architecture design<br>
-                        ✓ Basic HTML structure and responsive styling<br>
-                        ✓ Initial comprehensive documentation in TeX
-                    </div>
-                </div>
-                <div class="timeline-item" onclick="showPhaseDetail('Phase2')">
-                    <div class="timeline-date">→ Phase 2: Development (Current)</div>
-                    <div class="timeline-content">
-                        → Advanced frontend features and UI/UX enhancements<br>
-                        → Python backend implementation and API setup<br>
-                        → AI model integration and optimization
-                    </div>
-                </div>
-                <div class="timeline-item" onclick="showPhaseDetail('Phase3')">
-                    <div class="timeline-date">📋 Phase 3: Optimization (Upcoming)</div>
-                    <div class="timeline-content">
-                        📋 Performance optimization and speed improvements<br>
-                        📋 Enhanced user experience and accessibility<br>
-                        📋 Comprehensive testing and quality assurance
-                    </div>
-                </div>
-                <div class="timeline-item" onclick="showPhaseDetail('Phase4')">
-                    <div class="timeline-date">🚀 Phase 4: Release (Future)</div>
-                    <div class="timeline-content">
-                        🚀 Beta testing with stakeholders and feedback collection<br>
-                        🚀 Final documentation and deployment preparation<br>
-                        🚀 Public release and ongoing support
-                    </div>
-                </div>
+        <!-- Call to Action -->
+        <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(240, 147, 251, 0.1)); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 20px; padding: 3rem 2rem; text-align: center; margin: 4rem 0;">
+            <h2 style="font-size: 2em; color: var(--primary); margin-bottom: 1rem;">Ready to Transform Your Laboratory?</h2>
+            <p style="font-size: 1.1em; color: var(--text-secondary); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Deploy AI Microscope and experience the future of bacterial identification.
+            </p>
+            <div class="button-group">
+                <a href="https://github.com/DMB13/AI_MICROSCOPE-main" target="_blank" class="btn btn-primary">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+                <button class="btn btn-secondary" onclick="openModal('contact')">
+                    <i class="fas fa-envelope"></i> Contact Us
+                </button>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <div class="footer">
-        <p><strong>© 2026 AI Microscope Project</strong></p>
-        <p>Maintained by <a href="https://github.com/DMB13">DMB13</a></p>
-        <p style="font-size: 0.9em; margin-top: 1rem; opacity: 0.7;">
-            <a href="https://github.com/DMB13/AI_MICROSCOPE-main">📍 Repository</a> • 
-            <a href="https://github.com/DMB13/AI_MICROSCOPE-main/issues">⚙️ Issues</a> •
-            <a href="https://github.com/DMB13">👤 Profile</a>
-        </p>
+    <footer class="footer">
+        <p><strong>AI Microscope</strong> - AI-Assisted Bacterial Identification Workstation</p>
+        <p>Designed for <strong>Mbeya Regional Referral Hospital (MRRH)</strong> & <strong>Mbeya University of Science & Technology (MUST)</strong></p>
+        <p>Version 2.0 | <a href="https://github.com/DMB13/AI_MICROSCOPE-main" target="_blank">GitHub Repository</a></p>
+        <p style="margin-top: 1.5rem; font-size: 0.9em;">© 2026 DEVIS MULOKOZI BYARUSHENGO. All rights reserved.</p>
+    </footer>
+
+    <!-- MODALS -->
+
+    <div id="overview-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('overview-modal')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Project Overview</h2>
+            <p>AI Microscope introduces an Offline AI-Assisted Workstation designed for the Microbiology Laboratory at Mbeya Regional Referral Hospital (MRRH).</p>
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem;">Clinical Impact</h3>
+            <ul style="margin-left: 2rem; color: var(--text-secondary);">
+                <li>Faster diagnosis enabling targeted antibiotic therapy</li>
+                <li>Reduced antibiotic resistance through precision medicine</li>
+                <li>Improved patient outcomes</li>
+                <li>Support for low-resource clinical environments</li>
+            </ul>
+        </div>
     </div>
 
-    <!-- Modals -->
-    <div id="detailModal" class="modal">
+    <div id="specs" class="modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle" style="color: var(--primary); margin-bottom: 1rem;"></h2>
-            <p id="modalContent" style="color: var(--text-secondary); line-height: 1.8;"></p>
-            <button class="btn btn-primary" onclick="closeModal()" style="margin-top: 1.5rem;">Close</button>
+            <span class="close-modal" onclick="closeModal('specs')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Technical Specifications</h2>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>Base Architecture:</strong> EfficientNetV2M</li>
+                <li><strong>Framework:</strong> TensorFlow 2.18.1 + Keras 3.x</li>
+                <li><strong>Classes:</strong> 34 bacterial species</li>
+                <li><strong>Input:</strong> 224x224 RGB images</li>
+                <li><strong>Parameters:</strong> 105.7M</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="performance" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('performance')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Performance Metrics</h2>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>Processing:</strong> Under 5 seconds per sample</li>
+                <li><strong>Confidence Threshold:</strong> 90% minimum</li>
+                <li><strong>Dataset:</strong> DiBaS (Digital Bacterial System)</li>
+                <li><strong>Operation:</strong> Completely offline</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="contact" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('contact')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Contact Information</h2>
+            <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
+                <strong>Project Author:</strong><br>
+                DEVIS MULOKOZI BYARUSHENGO<br>
+                <a href="https://github.com/DMB13" target="_blank" style="color: var(--primary);">@DMB13 on GitHub</a>
+            </p>
+            <p style="color: var(--text-secondary); line-height: 1.8;">
+                <strong>Partner Institutions:</strong><br>
+                Mbeya Regional Referral Hospital (MRRH)<br>
+                Mbeya University of Science and Technology (MUST)
+            </p>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal">
+        <div class="image-modal-content">
+            <span class="image-close" onclick="closeImageModal()">&times;</span>
+            <img id="modalImage" src="" alt="Full size image">
         </div>
     </div>
 
     <script>
-        // Modal functions
-        function showModal(title, content) {
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalContent').textContent = content;
-            document.getElementById('detailModal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('detailModal').classList.remove('active');
-        }
-
-        // Stat detail handler
-        function showStatDetail(stat) {
-            const details = {
-                'HTML': 'HTML (78.1%) - Frontend markup and structure for the web-based dashboard and user interface components.',
-                'TeX': 'TeX/LaTeX (18.1%) - Comprehensive documentation, technical reports, and scientific papers.',
-                'Python': 'Python (3.8%) - Backend logic, AI model inference, and data processing utilities.',
-                'Size': 'Repository Size: 220KB - Optimized project structure with efficient resource management.'
-            };
-            showModal(`${stat} Composition`, details[stat] || 'Details coming soon');
-        }
-
-        // Technology detail handler
-        function showTechDetail(tech) {
-            const details = {
-                'HTML5': 'Modern HTML5 markup providing semantic structure and accessibility features for the web platform.',
-                'CSS3': 'Advanced CSS3 with gradients, animations, and responsive design for modern UI/UX.',
-                'JavaScript': 'Client-side JavaScript enabling interactive features, modals, and smooth animations.',
-                'Python': 'Python backend with TensorFlow for AI inference and data processing capabilities.',
-                'TensorFlow': 'Deep learning framework (TensorFlow 2.18.1 with Keras 3.x) powering the AI model.',
-                'Git': 'Version control system for collaborative development and project management.'
-            };
-            showModal(`${tech}`, details[tech] || 'Details coming soon');
-        }
-
-        // Feature detail handler
-        function showFeatureDetail(feature) {
-            const details = {
-                'AI Analysis': 'Our AI-powered analysis uses EfficientNetV2M deep learning model trained on the DiBaS dataset to identify 34 bacterial species with high accuracy and confidence scoring.',
-                'Visualization': 'Interactive dashboards display real-time analysis results, confidence metrics, and Grad-CAM heatmaps for visual explainability.',
-                'Performance': 'Optimized inference engine delivers results in under 5 seconds per image, enabling rapid diagnostic workflows.',
-                'Security': 'Enterprise-grade security with offline inference, secure patient data handling, and comprehensive audit trails.',
-                'Documentation': 'Complete technical documentation in TeX format, user guides, API documentation, and deployment guides.',
-                'Interface': 'Responsive web interface accessible on desktop, tablet, and mobile devices with modern UI conventions.'
-            };
-            showModal(`✨ ${feature}`, details[feature] || 'Details coming soon');
-        }
-
-        // Progress detail handler
-        function showProgressDetail(category) {
-            const details = {
-                'Frontend': 'Frontend Development (80%) - Core UI components, responsive design, and interactive features are complete. Final polish and optimization in progress.',
-                'Backend': 'Backend Integration (65%) - API endpoints and service layer under development. Database integration and inference engine integration ongoing.',
-                'AI': 'AI Model Training (70%) - Model training on DiBaS dataset complete. Fine-tuning for clinical validation and performance optimization in progress.',
-                'Documentation': 'Documentation (75%) - Comprehensive user guides, API documentation, and deployment guides nearly complete. Final reviews and updates pending.',
-                'Testing': 'Testing & QA (60%) - Unit testing and integration testing in progress. System-level testing and clinical validation upcoming.'
-            };
-            showModal(`📈 ${category}`, details[category] || 'Details coming soon');
-        }
-
-        // Phase detail handler
-        function showPhaseDetail(phase) {
-            const details = {
-                'Phase1': 'Phase 1 - Foundation: Successfully completed project setup, architecture design, basic HTML structure with responsive styling, and initial TeX documentation.',
-                'Phase2': 'Phase 2 - Development (Current): Implementing advanced frontend features, Python backend services, and AI model integration for production readiness.',
-                'Phase3': 'Phase 3 - Optimization: Focus on performance tuning, UX/accessibility improvements, and comprehensive testing across all modules.',
-                'Phase4': 'Phase 4 - Release: Beta testing with stakeholders, final documentation updates, and public release with long-term support plans.'
-            };
-            showModal(`🗺️ ${phase}`, details[phase] || 'Details coming soon');
-        }
-
-        // Copy to clipboard
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showNotification('Copied to clipboard!');
-            });
-        }
-
-        // Notification system
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideInRight 0.3s ease reverse';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
-        // Smooth scroll navigation
-        function scrollToSection(id) {
-            const element = document.getElementById(id);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
             }
         }
 
-        // Close modal on background click
-        document.getElementById('detailModal').addEventListener('click', function(event) {
-            if (event.target === this) {
-                closeModal();
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
             }
-        });
+        }
 
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animated');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.card, .feature-box, .progress-item, .timeline-item').forEach(el => {
-            el.classList.add('scroll-animate');
-            observer.observe(el);
-        });
-
-        // Smooth link clicks
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (href && href !== '#') {
-                    e.preventDefault();
-                    scrollToSection(href.substring(1));
-                }
-            });
-        });
-
-        // Navbar shadow on scroll
-        window.addEventListener('scroll', () => {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.5)';
-            } else {
-                navbar.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
             }
-        });
+        }
 
-        // Easter egg
+        function openImageModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImage');
+            img.src = imageSrc;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            if (event.target.classList.contains('image-modal')) {
+                closeImageModal();
+            }
+        }
+
         document.addEventListener('keydown', function(event) {
-            if (event.key === '?' || event.key === '/') {
-                showNotification('✨ Welcome to DMB AI Microscope! Explore the interactive elements throughout the page.');
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                closeImageModal();
+                document.body.style.overflow = 'auto';
             }
         });
-
-        console.log('%c🔬 DMB AI Microscope Dashboard', 'font-size: 20px; color: #667eea; font-weight: bold;');
-        console.log('%cBuilt with passion for healthcare innovation', 'color: #764ba2; font-size: 14px;');
     </script>
 </body>
 </html>
