@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Microscope - AI-Assisted Bacterial Identification for Clinical Labs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+            --dark: #0f172a;
+            --darker: #0a0e27;
+            --light: #f8fafc;
+            --card: #1e293b;
+            --border: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #1a1a2e 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(240, 147, 251, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s;
+            line-height: 1;
+        }
+
+        .close-modal:hover {
+            color: var(--primary);
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(102, 126, 234, 0.05) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.2) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -50%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(240, 147, 251, 0.2) 0%, transparent 70%);
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            letter-spacing: -1px;
+            animation: slideInDown 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: slideInUp 0.8s ease 0.1s both;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            animation: slideInUp 0.8s ease 0.2s both;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(240, 147, 251, 0.1));
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(30, 41, 59, 0.3) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.8s ease forwards;
+            cursor: pointer;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-15px);
+            border-color: rgba(102, 126, 234, 0.4);
+            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.15);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.05);
+            border-left: 3px solid var(--primary);
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .info-row:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateX(5px);
+        }
+
+        .info-label {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .info-value {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.9rem 1.8rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .btn-small {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9em;
+            border-radius: 8px;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(240, 147, 251, 0.05));
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            animation: slideInUp 0.8s ease forwards;
+        }
+
+        .feature-box:nth-child(1) { animation-delay: 0.1s; }
+        .feature-box:nth-child(2) { animation-delay: 0.2s; }
+        .feature-box:nth-child(3) { animation-delay: 0.3s; }
+        .feature-box:nth-child(4) { animation-delay: 0.4s; }
+        .feature-box:nth-child(5) { animation-delay: 0.5s; }
+        .feature-box:nth-child(6) { animation-delay: 0.6s; }
+
+        .feature-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-10px);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .feature-box:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            font-size: 1.2em;
+        }
+
+        .feature-desc {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Progress Bars */
+        .progress-section {
+            margin-top: 2rem;
+        }
+
+        .progress-item {
+            margin-bottom: 2rem;
+            animation: slideInUp 0.8s ease forwards;
+        }
+
+        .progress-item:nth-child(1) { animation-delay: 0.1s; }
+        .progress-item:nth-child(2) { animation-delay: 0.2s; }
+        .progress-item:nth-child(3) { animation-delay: 0.3s; }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            transition: width 0.8s ease;
+            position: relative;
+            overflow: hidden;
+            animation: expandWidth 1.2s ease;
+        }
+
+        @keyframes expandWidth {
+            from { width: 0 !important; }
+        }
+
+        /* Media Section */
+        .media-section {
+            margin: 3rem 0;
+        }
+
+        .media-item {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(30, 41, 59, 0.3) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .media-item:hover {
+            border-color: rgba(102, 126, 234, 0.4);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.15);
+        }
+
+        .media-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(240, 147, 251, 0.1));
+            border: 2px dashed rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 3em;
+            color: var(--text-secondary);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(240, 147, 251, 0.2));
+            color: var(--primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.9em;
+            margin-right: 0.75rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .badge:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(240, 147, 251, 0.3));
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, rgba(10, 14, 39, 0.8), rgba(15, 23, 42, 0.8));
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(102, 126, 234, 0.1);
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            color: var(--accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .navbar-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+
+            .media-placeholder {
+                height: 250px;
+            }
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.1em;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">
+                <i class="fas fa-microscope"></i> AI Microscope
+            </div>
+            <ul class="nav-links">
+                <li><a onclick="scrollToSection('overview')">Overview</a></li>
+                <li><a onclick="scrollToSection('features')">Features</a></li>
+                <li><a onclick="scrollToSection('technology')">Technology</a></li>
+                <li><a onclick="scrollToSection('benefits')">Benefits</a></li>
+                <li><a href="https://github.com/DMB13/AI_MICROSCOPE-main" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero" id="overview">
+            <div class="hero-content">
+                <h1>🔬 AI Microscope</h1>
+                <p>Revolutionary AI-Assisted Workstation for Rapid Bacterial Species Identification in Clinical Laboratories</p>
+                <p style="font-size: 1.1em; margin-top: 1rem;">Transform bacterial identification from 48-72 hours to under 5 seconds</p>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="openModal('demo')">
+                        <i class="fas fa-play"></i> View Demo
+                    </button>
+                    <button class="btn btn-secondary" onclick="openModal('contact')">
+                        <i class="fas fa-envelope"></i> Contact Us
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Overview Card -->
+        <div class="main-grid">
+            <div class="card" onclick="openModal('overview-modal')">
+                <h2><i class="fas fa-project-diagram"></i> Project Overview</h2>
+                <div class="project-info">
+                    <div class="info-row">
+                        <span class="info-label">📦 Repository:</span>
+                        <span class="info-value">DMB13/AI_MICROSCOPE-main</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">🏥 Institution:</span>
+                        <span class="info-value">Mbeya Regional Referral Hospital</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">🎓 University:</span>
+                        <span class="info-value">Mbeya University of Science & Technology</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">⚡ Processing Time:</span>
+                        <span class="info-value">Under 5 seconds per sample</span>
+                    </div>
+                </div>
+                <p style="margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.95em;">
+                    Click to learn more about the project scope, clinical applications, and deployment strategy.
+                </p>
+            </div>
+
+            <!-- Specifications Card -->
+            <div class="card" onclick="openModal('specs')">
+                <h2><i class="fas fa-cogs"></i> Technical Specifications</h2>
+                <div class="project-info">
+                    <div class="info-row">
+                        <span class="info-label">🤖 AI Model:</span>
+                        <span class="info-value">EfficientNetV2M</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">📊 Species Classes:</span>
+                        <span class="info-value">34 Bacterial Species</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">💾 Framework:</span>
+                        <span class="info-value">TensorFlow 2.18.1 + Keras 3.x</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">🔍 Input Resolution:</span>
+                        <span class="info-value">224x224 RGB Images</span>
+                    </div>
+                </div>
+                <p style="margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.95em;">
+                    Click for detailed technical specifications and system architecture information.
+                </p>
+            </div>
+
+            <!-- Performance Metrics Card -->
+            <div class="card" onclick="openModal('performance')">
+                <h2><i class="fas fa-chart-line"></i> Performance Metrics</h2>
+                <div class="project-info">
+                    <div class="info-row">
+                        <span class="info-label">✅ Accuracy:</span>
+                        <span class="info-value">Industry-Leading</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">🎯 Confidence Threshold:</span>
+                        <span class="info-value">90% Minimum</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">📈 Dataset:</span>
+                        <span class="info-value">DiBaS (Digital Bacterial System)</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">⏱️ Model Parameters:</span>
+                        <span class="info-value">105.7M</span>
+                    </div>
+                </div>
+                <p style="margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.95em;">
+                    Click to view comprehensive performance metrics and validation results.
+                </p>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <section id="features" style="margin: 4rem 0;">
+            <h2 class="section-title">✨ Key Features</h2>
+            <p class="section-subtitle">Innovative capabilities designed for modern clinical laboratories</p>
+            
+            <div class="features-grid">
+                <div class="feature-box" onclick="openModal('feature-offline')">
+                    <span class="feature-icon">📡</span>
+                    <div class="feature-title">Offline Inference</div>
+                    <div class="feature-desc">No internet connection required. Reliable operation in resource-constrained clinical settings with full data security.</div>
+                </div>
+
+                <div class="feature-box" onclick="openModal('feature-speed')">
+                    <span class="feature-icon">⚡</span>
+                    <div class="feature-title">High-Speed Analysis</div>
+                    <div class="feature-desc">Species-level bacterial identification in under 5 seconds, dramatically reducing time-to-result.</div>
+                </div>
+
+                <div class="feature-box" onclick="openModal('feature-explainability')">
+                    <span class="feature-icon">🧠</span>
+                    <div class="feature-title">Explainable AI (Grad-CAM)</div>
+                    <div class="feature-desc">Visual heatmaps highlight specific morphological features used by the AI, building trust with clinicians.</div>
+                </div>
+
+                <div class="feature-box" onclick="openModal('feature-registry')">
+                    <span class="feature-icon">📋</span>
+                    <div class="feature-title">Patient Registry</div>
+                    <div class="feature-desc">Integrated SQLite database for patient records, timestamps, results, and comprehensive audit trails.</div>
+                </div>
+
+                <div class="feature-box" onclick="openModal('feature-ui')">
+                    <span class="feature-icon">🎨</span>
+                    <div class="feature-title">Modern GUI</div>
+                    <div class="feature-desc">User-friendly dashboard built with CustomTkinter, designed for clinical staff with minimal training.</div>
+                </div>
+
+                <div class="feature-box" onclick="openModal('feature-clinical')">
+                    <span class="feature-icon">🏥</span>
+                    <div class="feature-title">Clinical Safety</div>
+                    <div class="feature-desc">90% confidence threshold with "INCONCLUSIVE" flag for low-confidence predictions. Decision support system, not autonomous.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technology Section -->
+        <section id="technology" style="margin: 4rem 0;">
+            <h2 class="section-title">🛠️ Technology Stack</h2>
+            <p class="section-subtitle">Built on cutting-edge, production-ready technologies</p>
+
+            <div style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(30, 41, 59, 0.3) 100%); border: 1px solid rgba(102, 126, 234, 0.2); border-radius: 15px; padding: 2rem; margin-bottom: 2rem;">
+                <div class="progress-section">
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Deep Learning: TensorFlow 2.18.1 + Keras 3.x</span>
+                            <span>95%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 95%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Computer Vision: OpenCV</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-label">
+                            <span>Database: SQLite3</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem;">Core Technologies</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                        <span class="badge">Python 3.11+</span>
+                        <span class="badge">TensorFlow</span>
+                        <span class="badge">Keras</span>
+                        <span class="badge">OpenCV</span>
+                        <span class="badge">CustomTkinter</span>
+                        <span class="badge">Pillow</span>
+                        <span class="badge">NumPy</span>
+                        <span class="badge">SQLite</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="openModal('tech-details')">
+                    <i class="fas fa-book"></i> View Full Tech Details
+                </button>
+            </div>
+        </section>
+
+        <!-- Business Benefits Section -->
+        <section id="benefits" style="margin: 4rem 0;">
+            <h2 class="section-title">💼 Business Benefits</h2>
+            <p class="section-subtitle">Transforming laboratory operations and clinical outcomes</p>
+
+            <div class="features-grid">
+                <div class="feature-box" onclick="openModal('benefit-efficiency')">
+                    <span class="feature-icon">⏰</span>
+                    <div class="feature-title">Reduced Turnaround Time</div>
+                    <div class="feature-desc">From 48-72 hours to under 5 seconds. Enable faster clinical decisions and improved patient outcomes.</div>
+                </div>
+
+                <div class="feature-box" onclick="openModal('benefit-cost')">
+                    <span class="feature-icon">💰</span>
+                    <div class="feature-title">Lower Operational Costs</div>
+                    <div class="feature-desc">Reduce reagent consumption, labor hours, and unnecessary broad-spectrum antibiotic prescriptions.</div>
+                </div>
+
+                <div class="feature-box" onclick="openModal('benefit-accuracy')">
+                    <span class="feature-icon">🎯</span>
+                    <div class="feature-title">Superior Accuracy</div>
+                    <div class="feature-desc">AI-powered identification with explainability features verified against DiBaS dataset.</div>
+                </div>
+
+                <div class="feature-box" onclick="openModal('benefit-deployment')">
+                    <span class="feature-icon">🚀</span>
+                    <div class="feature-title">Easy Deployment</div>
+                    <div class="feature-desc">Works offline with minimal hardware requirements. Deployable in resource-constrained settings.</div>
+                </div>
+
+                <div class="feature-box" onclick="openModal('benefit-scalability')">
+                    <span class="feature-icon">📈</span>
+                    <div class="feature-title">Scalability</div>
+                    <div class="feature-desc">Support multiple workstations across departments with centralized data management and backup.</div>
+                </div>
+
+                <div class="feature-box" onclick="openModal('benefit-compliance')">
+                    <span class="feature-icon">✅</span>
+                    <div class="feature-title">Regulatory Compliance</div>
+                    <div class="feature-desc">Built-in audit trails, patient privacy protection, and clinical validation documentation.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Media Section -->
+        <section class="media-section" id="media">
+            <h2 class="section-title">📸 Multimedia</h2>
+            <p class="section-subtitle">Visual demonstrations and documentation</p>
+
+            <div class="media-item">
+                <h3 style="margin-bottom: 1rem; color: var(--primary);">System Demonstration Video</h3>
+                <div class="media-placeholder">
+                    <i class="fas fa-video"></i>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.9em;">
+                    <em>Video placeholder: System overview, user interface walkthrough, and analysis demonstration (to be added)</em>
+                </p>
+                <button class="btn btn-secondary btn-small" onclick="openModal('video-demo')">
+                    <i class="fas fa-play-circle"></i> Play Demo
+                </button>
+            </div>
+
+            <div class="media-item">
+                <h3 style="margin-bottom: 1rem; color: var(--primary);">System Screenshots</h3>
+                <div class="media-placeholder">
+                    <i class="fas fa-images"></i>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.9em;">
+                    <em>Gallery placeholder: Dashboard, analysis results, patient records interface (to be added)</em>
+                </p>
+                <button class="btn btn-secondary btn-small" onclick="openModal('screenshots')">
+                    <i class="fas fa-image"></i> View Gallery
+                </button>
+            </div>
+
+            <div class="media-item">
+                <h3 style="margin-bottom: 1rem; color: var(--primary);">Clinical Case Studies</h3>
+                <div class="media-placeholder">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.9em;">
+                    <em>Documentation placeholder: Real-world clinical applications and case examples (to be added)</em>
+                </p>
+                <button class="btn btn-secondary btn-small" onclick="openModal('case-studies')">
+                    <i class="fas fa-book-open"></i> Read Cases
+                </button>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(240, 147, 251, 0.1)); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 20px; padding: 3rem 2rem; text-align: center; margin: 4rem 0;">
+            <h2 style="font-size: 2em; color: var(--primary); margin-bottom: 1rem;">Ready to Transform Your Laboratory?</h2>
+            <p style="font-size: 1.1em; color: var(--text-secondary); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Deploy AI Microscope in your clinical laboratory and experience the future of bacterial identification.
+            </p>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="openModal('contact')">
+                    <i class="fas fa-envelope"></i> Contact Sales
+                </button>
+                <button class="btn btn-secondary" onclick="openModal('demo-request')">
+                    <i class="fas fa-calendar"></i> Request Demo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p><strong>AI Microscope</strong> - AI-Assisted Bacterial Identification Workstation</p>
+        <p>Designed for <strong>Mbeya Regional Referral Hospital (MRRH)</strong> & <strong>Mbeya University of Science & Technology (MUST)</strong></p>
+        <p>Version 2.0 | Clinical Evaluation Phase | 
+            <a href="https://github.com/DMB13/AI_MICROSCOPE-main" target="_blank">GitHub Repository</a> | 
+            <a onclick="openModal('documentation')">Documentation</a>
+        </p>
+        <p style="margin-top: 1.5rem; font-size: 0.9em;">© 2026 DEVIS MULOKOZI BYARUSHENGO. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.85em; color: var(--text-secondary);">
+            This tool is intended as a Decision Support System (DSS) for research and clinical evaluation purposes.
+        </p>
+    </footer>
+
+    <!-- MODALS -->
+
+    <!-- Overview Modal -->
+    <div id="overview-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('overview-modal')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Project Overview</h2>
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem;">🎯 Project Objective</h3>
+            <p>In resource-constrained clinical settings, identifying bacterial pathogens traditionally takes 48 to 72 hours through culture methods. This delay often leads to empirical prescribing of broad-spectrum antibiotics, contributing to antimicrobial resistance.</p>
+            <p>AI Microscope introduces an <strong>Offline AI-Assisted Workstation</strong> designed specifically for the Microbiology Laboratory at Mbeya Regional Referral Hospital (MRRH), reducing diagnostic time from days to seconds.</p>
+            
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem;">🏥 Clinical Impact</h3>
+            <ul style="margin-left: 2rem; color: var(--text-secondary);">
+                <li>Faster diagnosis enabling timely, targeted antibiotic therapy</li>
+                <li>Reduced antibiotic resistance through precision medicine</li>
+                <li>Improved patient outcomes and reduced hospital stay</li>
+                <li>Support for low-resource clinical environments</li>
+            </ul>
+
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem;">🔬 Scientific Innovation</h3>
+            <p>Utilizes a deep learning model (EfficientNetV2M) trained on the Digital Bacterial System (DiBaS) dataset to classify 34 bacterial species with explainable AI (Grad-CAM) visualization.</p>
+            
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem;">📚 Author</h3>
+            <p><strong>DEVIS MULOKOZI BYARUSHENGO</strong><br>Bachelor of Laboratory Science and Technology<br>Mbeya University of Science and Technology (MUST)</p>
+        </div>
+    </div>
+
+    <!-- Specifications Modal -->
+    <div id="specs" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('specs')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Technical Specifications</h2>
+            
+            <h3 style="color: var(--text-primary); margin-bottom: 0.75rem;">🤖 AI Model Architecture</h3>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>Base Architecture:</strong> EfficientNetV2M</li>
+                <li><strong>Framework:</strong> TensorFlow 2.18.1 with Keras 3.x</li>
+                <li><strong>Input Resolution:</strong> 224x224 RGB images</li>
+                <li><strong>Output Classes:</strong> 34 bacterial species</li>
+                <li><strong>Model Parameters:</strong> 105.7M</li>
+                <li><strong>Model File Size:</strong> ~1.2GB (best_clinical_rugged_1777619657.keras)</li>
+            </ul>
+
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem;">💻 Software Requirements</h3>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Python 3.11+</li>
+                <li>TensorFlow 2.18.1</li>
+                <li>OpenCV (Computer Vision)</li>
+                <li>CustomTkinter (UI Framework)</li>
+                <li>SQLite3 (Database)</li>
+                <li>Pillow/PIL (Image Processing)</li>
+                <li>NumPy (Numerical Computing)</li>
+            </ul>
+
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem;">🛠️ System Architecture</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Layered MVC Architecture:</p>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>Controllers:</strong> Camera, Diagnosis, Export operations</li>
+                <li><strong>Views:</strong> Control Wing, Primary Viewport, Intelligence Wing</li>
+                <li><strong>Models:</strong> Database operations and data models</li>
+                <li><strong>Services:</strong> Inference and clinical record management</li>
+            </ul>
+
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem;">🏥 Clinical Specifications</h3>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Confidence Threshold: 90% minimum</li>
+                <li>Processing Time: Under 5 seconds per sample</li>
+                <li>Dataset: Digital Bacterial System (DiBaS) with clinical validation</li>
+                <li>Explainability: Grad-CAM heatmap visualization</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Performance Metrics Modal -->
+    <div id="performance" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('performance')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Performance Metrics & Validation</h2>
+            
+            <h3 style="color: var(--text-primary); margin-bottom: 0.75rem;">📊 Evaluation Metrics</h3>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>Accuracy:</strong> Overall correct classification rate across 34 species</li>
+                <li><strong>Sensitivity/Specificity:</strong> Ability to identify critical pathogens (MRSA, E. coli, etc.)</li>
+                <li><strong>Turnaround Time (TAT):</strong> AI-assisted vs. traditional culture comparison</li>
+                <li><strong>Clinical Validation:</strong> Tested on DiBaS dataset with regional hospital data</li>
+            </ul>
+
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem;">⚡ Performance Benchmarks</h3>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Average inference time: 4-5 seconds per image</li>
+                <li>Memory footprint: ~2GB RAM required</li>
+                <li>GPU acceleration: Optional for improved performance</li>
+                <li>Offline capability: 100% - No internet required</li>
+            </ul>
+
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem;">🎯 Bacterial Species Coverage</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">The model identifies 34 species including:</p>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 1.8;">
+                <li>S. aureus (Staphylococcus aureus)</li>
+                <li>E. coli (Escherichia coli)</li>
+                <li>Klebsiella pneumoniae</li>
+                <li>Candida albicans</li>
+                <li>And 30 additional clinically relevant species</li>
+            </ul>
+
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem;">✅ Quality Assurance</h3>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Comprehensive test report validation</li>
+                <li>Installation Qualification (IQ)</li>
+                <li>Operational Qualification (OQ)</li>
+                <li>Performance Qualification (PQ)</li>
+                <li>ISO 14971 Risk Management compliance</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Feature Details Modals -->
+    <div id="feature-offline" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('feature-offline')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-wifi"></i> Offline Inference</h2>
+            <p style="margin-bottom: 1.5rem;">The AI Microscope system operates completely offline, making it ideal for resource-constrained healthcare settings.</p>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Key Advantages:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>No internet connection required for diagnosis</li>
+                <li>Ensures complete data privacy and security</li>
+                <li>Operates reliably in areas with poor connectivity</li>
+                <li>No cloud dependencies or licensing restrictions</li>
+                <li>Full local data control and compliance</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="feature-speed" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('feature-speed')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-bolt"></i> High-Speed Analysis</h2>
+            <p style="margin-bottom: 1.5rem;">Achieve bacterial species identification in under 5 seconds, revolutionizing laboratory workflows.</p>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Impact on Clinical Operations:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>Traditional method:</strong> 48-72 hours via culture</li>
+                <li><strong>AI Microscope:</strong> Under 5 seconds</li>
+                <li>Enable same-day or next-day targeted therapy</li>
+                <li>Reduce empirical antibiotic prescribing</li>
+                <li>Increase laboratory throughput</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="feature-explainability" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('feature-explainability')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-brain"></i> Explainable AI (Grad-CAM)</h2>
+            <p style="margin-bottom: 1.5rem;">Grad-CAM (Gradient-weighted Class Activation Mapping) provides visual explanations for AI decisions.</p>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Clinical Benefits:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Visual heatmaps highlight morphological features</li>
+                <li>Build clinician trust through transparency</li>
+                <li>Identify potential misclassifications</li>
+                <li>Support clinical decision-making</li>
+                <li>Validate AI reasoning with domain experts</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="feature-registry" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('feature-registry')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-list"></i> Integrated Patient Registry</h2>
+            <p style="margin-bottom: 1.5rem;">Built-in SQLite database manages all clinical data securely and locally.</p>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Features:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Patient ID and case number tracking</li>
+                <li>Timestamp of every analysis</li>
+                <li>AI diagnosis results with confidence scores</li>
+                <li>Complete audit trail for compliance</li>
+                <li>Easy export for reporting and integration</li>
+                <li>Secure local storage with backup support</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="feature-ui" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('feature-ui')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-palette"></i> Modern GUI</h2>
+            <p style="margin-bottom: 1.5rem;">User-friendly interface designed specifically for clinical staff.</p>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Interface Components:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>Control Wing (Left Panel):</strong> Patient input and camera controls</li>
+                <li><strong>Primary Viewport (Center):</strong> Live camera feed and image display</li>
+                <li><strong>Intelligence Wing (Right Panel):</strong> AI results and diagnosis</li>
+                <li><strong>Image Adjustments:</strong> Real-time brightness/contrast optimization</li>
+                <li><strong>Built-in Help:</strong> User guide, FAQ, and documentation</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="feature-clinical" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('feature-clinical')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-hospital"></i> Clinical Safety</h2>
+            <p style="margin-bottom: 1.5rem;">Designed as a Decision Support System (DSS) with built-in safety guardrails.</p>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Safety Features:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>90% Confidence Threshold:</strong> Flags low-confidence predictions as "INCONCLUSIVE"</li>
+                <li><strong>Not Autonomous:</strong> Assists clinicians without replacing human judgment</li>
+                <li><strong>Audit Trail:</strong> Complete record of all diagnoses and decisions</li>
+                <li><strong>Ethical Compliance:</strong> ISO 14971 risk management framework</li>
+                <li><strong>Clinician Override:</strong> Final diagnosis authority remains with medical staff</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Business Benefits Modals -->
+    <div id="benefit-efficiency" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('benefit-efficiency')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-hourglass-end"></i> Reduced Turnaround Time</h2>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Traditional Workflow:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Sample collection: 0 hours</li>
+                <li>Culturing: 24-48 hours</li>
+                <li>Identification: 24 hours</li>
+                <li><strong>Total: 48-72 hours</strong></li>
+            </ul>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">AI Microscope Workflow:</h4>
+            <ul style="margin-left: 2rem; color: var(--success); line-height: 2;">
+                <li>Sample preparation: &lt;5 minutes</li>
+                <li>Microscopy imaging: &lt;5 minutes</li>
+                <li>AI analysis: &lt;5 seconds</li>
+                <li><strong>Total: Under 15 minutes</strong></li>
+            </ul>
+            <h4 style="color: var(--text-primary); margin-top: 1.5rem;">Clinical Benefits:</h4>
+            <p style="color: var(--text-secondary); margin-left: 1rem;">Faster diagnosis enables timely, targeted antibiotic therapy, improving patient outcomes and reducing hospital stay duration.</p>
+        </div>
+    </div>
+
+    <div id="benefit-cost" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('benefit-cost')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-chart-line"></i> Lower Operational Costs</h2>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Cost Reduction Areas:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>Reagent Costs:</strong> Eliminate expensive culture media</li>
+                <li><strong>Labor Hours:</strong> Reduce technician time per sample</li>
+                <li><strong>Antibiotic Costs:</strong> Avoid empirical broad-spectrum therapy</li>
+                <li><strong>Complications:</strong> Reduced adverse drug reactions</li>
+                <li><strong>Hospital Stay:</strong> Shorter patient stays with faster diagnosis</li>
+            </ul>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">ROI Calculation:</h4>
+            <p style="color: var(--text-secondary); margin-left: 1rem;">One-time hardware investment, minimal reagent requirements, dramatic operational savings per test.</p>
+        </div>
+    </div>
+
+    <div id="benefit-accuracy" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('benefit-accuracy')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-bullseye"></i> Superior Accuracy</h2>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Validation Framework:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Trained on Digital Bacterial System (DiBaS) dataset</li>
+                <li>Validated with regional hospital clinical data</li>
+                <li>Comprehensive test report and IQ/OQ/PQ protocols</li>
+                <li>ISO 14971 risk management compliance</li>
+            </ul>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Key Species Accuracy:</h4>
+            <p style="color: var(--text-secondary); margin-left: 1rem;">34 species classification with clinically relevant discrimination, especially for MRSA and other critical pathogens.</p>
+        </div>
+    </div>
+
+    <div id="benefit-deployment" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('benefit-deployment')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-rocket"></i> Easy Deployment</h2>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Hardware Requirements:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Standard Windows/Linux workstation</li>
+                <li>Digital microscope camera (USB-compatible)</li>
+                <li>2GB+ RAM (4GB+ recommended)</li>
+                <li>GPU optional (for improved performance)</li>
+                <li>No internet required</li>
+            </ul>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Installation:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Simple pip install of dependencies</li>
+                <li>Comprehensive deployment guide provided</li>
+                <li>Database setup automated</li>
+                <li>Built-in calibration and testing</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="benefit-scalability" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('benefit-scalability')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-expand"></i> Scalability</h2>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Multi-Workstation Support:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Deploy across multiple laboratory departments</li>
+                <li>Centralized patient record management</li>
+                <li>Unified database with backup support</li>
+                <li>Consistent protocols across locations</li>
+            </ul>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Growth Path:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Start with single workstation pilot</li>
+                <li>Expand to additional departments</li>
+                <li>Regional deployment to multiple hospitals</li>
+                <li>Integration with existing LIS/HIS systems</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="benefit-compliance" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('benefit-compliance')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-certificate"></i> Regulatory Compliance</h2>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Built-in Compliance Features:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>Audit Trail:</strong> Complete record of all diagnoses</li>
+                <li><strong>Data Privacy:</strong> Patient information protected locally</li>
+                <li><strong>ISO 14971:</strong> Risk management framework</li>
+                <li><strong>IQ/OQ/PQ:</strong> Installation and operational qualification protocols</li>
+                <li><strong>Data Security:</strong> Encryption and backup support</li>
+            </ul>
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Documentation Provided:</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>Software Requirements Specification (SRS)</li>
+                <li>Software Design Specification (SDS)</li>
+                <li>Risk Management File</li>
+                <li>Test Report and validation results</li>
+                <li>User training materials</li>
+                <li>Privacy policy and deployment guide</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Other Modals -->
+    <div id="tech-details" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('tech-details')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">Complete Technology Stack</h2>
+            
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Deep Learning</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>TensorFlow 2.18.1</li>
+                <li>Keras 3.x API</li>
+                <li>EfficientNetV2M base model</li>
+                <li>GPU acceleration support (CUDA)</li>
+            </ul>
+
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Computer Vision</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>OpenCV for image processing</li>
+                <li>Pillow (PIL) for image manipulation</li>
+                <li>NumPy for numerical computations</li>
+            </ul>
+
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">User Interface</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>CustomTkinter for modern GUI</li>
+                <li>Three-panel MVC architecture</li>
+                <li>Real-time image adjustment controls</li>
+            </ul>
+
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Database & Storage</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>SQLite3 for local database</li>
+                <li>File-based patient records</li>
+                <li>Automatic backup capabilities</li>
+            </ul>
+
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Hardware Integration</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li>USB camera support (OpenCV)</li>
+                <li>Multi-camera configuration</li>
+                <li>Hardware calibration settings</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="documentation" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('documentation')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">📚 Complete Documentation</h2>
+            
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">🚀 Getting Started</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>USER_GUIDE.md</strong> - Complete user manual and operating instructions</li>
+                <li><strong>DEPLOYMENT_GUIDE.md</strong> - Step-by-step deployment instructions</li>
+                <li><strong>HARDWARE_RECOMMENDATIONS.md</strong> - Hardware specifications</li>
+                <li><strong>USER_TRAINING_MANUAL.md</strong> - Training materials</li>
+            </ul>
+
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">📐 Specifications</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>SRS.md</strong> - Software Requirements (ISO 29148)</li>
+                <li><strong>SDS.md</strong> - Software Design Specification</li>
+                <li><strong>PROJECT_STRUCTURE.md</strong> - System architecture</li>
+            </ul>
+
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">🔒 Compliance</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>RISK_MANAGEMENT.md</strong> - ISO 14971 Risk Management</li>
+                <li><strong>IQ/OQ/PQ.md</strong> - Qualification protocols</li>
+                <li><strong>PRIVACY_POLICY.md</strong> - Data protection policy</li>
+            </ul>
+
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">❓ Support</h4>
+            <ul style="margin-left: 2rem; color: var(--text-secondary); line-height: 2;">
+                <li><strong>FAQ.md</strong> - Frequently asked questions</li>
+                <li><strong>TEST_REPORT.md</strong> - Testing and validation results</li>
+            </ul>
+
+            <p style="color: var(--primary); margin-top: 2rem; font-weight: 600;">
+                <i class="fas fa-external-link-alt"></i> Access full documentation in the 
+                <a href="https://github.com/DMB13/AI_MICROSCOPE-main/tree/main/docs" target="_blank" style="color: var(--primary);">GitHub docs folder</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="contact" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('contact')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">📧 Contact Information</h2>
+            
+            <h4 style="color: var(--text-primary); margin: 1rem 0;">Project Author</h4>
+            <p style="color: var(--text-secondary); margin-left: 1rem; line-height: 1.8;">
+                <strong>DEVIS MULOKOZI BYARUSHENGO</strong><br>
+                Bachelor of Laboratory Science and Technology<br>
+                Mbeya University of Science and Technology (MUST)<br>
+                <a href="https://github.com/DMB13" target="_blank" style="color: var(--primary);">@DMB13 on GitHub</a>
+            </p>
+
+            <h4 style="color: var(--text-primary); margin: 1.5rem 0;">Partner Institutions</h4>
+            <p style="color: var(--text-secondary); margin-left: 1rem; line-height: 1.8;">
+                <strong>Mbeya Regional Referral Hospital (MRRH)</strong><br>
+                Microbiology Department<br>
+                Mbeya, Tanzania
+            </p>
+
+            <p style="color: var(--text-secondary); margin-left: 1rem; margin-top: 1rem; line-height: 1.8;">
+                <strong>Mbeya University of Science and Technology (MUST)</strong><br>
+                Department of Applied Sciences<br>
+                Mbeya, Tanzania
+            </p>
+
+            <h4 style="color: var(--text-primary); margin: 1.5rem 0;">Connect</h4>
+            <div class="button-group">
+                <a href="https://github.com/DMB13/AI_MICROSCOPE-main" target="_blank" class="btn btn-secondary btn-small">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+            </div>
+
+            <p style="color: var(--text-secondary); margin-top: 2rem; font-size: 0.9em;">
+                For inquiries about deployment, licensing, or collaboration, please reach out through the GitHub repository issues or directly contact the institutions listed above.
+            </p>
+        </div>
+    </div>
+
+    <div id="demo-request" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('demo-request')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">📅 Request a Demo</h2>
+            
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                We'd love to show you how AI Microscope can transform your laboratory operations. Schedule a demonstration with our team.
+            </p>
+
+            <form style="display: flex; flex-direction: column; gap: 1rem;">
+                <div>
+                    <label style="color: var(--text-primary); display: block; margin-bottom: 0.5rem; font-weight: 600;">Institution Name</label>
+                    <input type="text" placeholder="Your hospital or laboratory name" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 8px; background: rgba(102, 126, 234, 0.05); color: var(--text-primary);">
+                </div>
+
+                <div>
+                    <label style="color: var(--text-primary); display: block; margin-bottom: 0.5rem; font-weight: 600;">Contact Name</label>
+                    <input type="text" placeholder="Your name" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 8px; background: rgba(102, 126, 234, 0.05); color: var(--text-primary);">
+                </div>
+
+                <div>
+                    <label style="color: var(--text-primary); display: block; margin-bottom: 0.5rem; font-weight: 600;">Email Address</label>
+                    <input type="email" placeholder="your@email.com" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 8px; background: rgba(102, 126, 234, 0.05); color: var(--text-primary);">
+                </div>
+
+                <div>
+                    <label style="color: var(--text-primary); display: block; margin-bottom: 0.5rem; font-weight: 600;">Preferred Date</label>
+                    <input type="date" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 8px; background: rgba(102, 126, 234, 0.05); color: var(--text-primary);">
+                </div>
+
+                <div>
+                    <label style="color: var(--text-primary); display: block; margin-bottom: 0.5rem; font-weight: 600;">Message</label>
+                    <textarea placeholder="Tell us about your laboratory and interests..." rows="4" style="width: 100%; padding: 0.75rem; border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 8px; background: rgba(102, 126, 234, 0.05); color: var(--text-primary); font-family: inherit;"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-calendar"></i> Request Demo
+                </button>
+            </form>
+
+            <p style="color: var(--text-secondary); margin-top: 1.5rem; font-size: 0.9em; text-align: center;">
+                Or reach out directly via <a href="https://github.com/DMB13/AI_MICROSCOPE-main" target="_blank" style="color: var(--primary);">GitHub</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Placeholder Modals for Media -->
+    <div id="video-demo" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('video-demo')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">🎬 System Demonstration Video</h2>
+            <div class="media-placeholder" style="height: 500px;">
+                <i class="fas fa-video"></i>
+            </div>
+            <p style="color: var(--text-secondary); text-align: center; margin-top: 1.5rem;">
+                <em>Video placeholder - System overview and demonstration video to be added</em>
+            </p>
+        </div>
+    </div>
+
+    <div id="screenshots" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('screenshots')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">📸 System Screenshots</h2>
+            <div class="media-placeholder" style="height: 400px;">
+                <i class="fas fa-images"></i>
+            </div>
+            <p style="color: var(--text-secondary); text-align: center; margin-top: 1.5rem;">
+                <em>Gallery placeholder - Dashboard, interface, and results screenshots to be added</em>
+            </p>
+        </div>
+    </div>
+
+    <div id="case-studies" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('case-studies')">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 1.5rem;">📖 Clinical Case Studies</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Real-world clinical applications and success stories from deployment in laboratory settings.
+            </p>
+            <div class="media-placeholder" style="height: 400px;">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <p style="color: var(--text-secondary); text-align: center; margin-top: 1.5rem;">
+                <em>Documentation placeholder - Clinical case studies and applications to be added</em>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Close modal when clicking outside content
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Prevent scrolling when modal is open
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    this.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
