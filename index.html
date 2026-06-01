@@ -42,7 +42,6 @@
             position: relative;
         }
 
-        /* Animated background */
         body::before {
             content: '';
             position: fixed;
@@ -60,6 +59,68 @@
         body > * {
             position: relative;
             z-index: 1;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary);
         }
 
         /* Navigation */
@@ -433,6 +494,12 @@
             transform: translateY(-3px);
         }
 
+        .btn-small {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9em;
+            border-radius: 8px;
+        }
+
         /* Language Chart */
         .language-chart {
             display: grid;
@@ -593,6 +660,7 @@
             overflow: hidden;
             border: 1px solid rgba(102, 126, 234, 0.2);
             position: relative;
+            cursor: pointer;
         }
 
         .progress-bar::after {
@@ -645,6 +713,7 @@
             padding-bottom: 2.5rem;
             position: relative;
             animation: slideInUp 0.8s ease forwards;
+            cursor: pointer;
         }
 
         .timeline-item:nth-child(1) { animation-delay: 0.1s; }
@@ -709,6 +778,31 @@
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(240, 147, 251, 0.3));
             border-color: rgba(102, 126, 234, 0.5);
             transform: scale(1.05);
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            animation: slideInRight 0.3s ease;
+            z-index: 999;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         /* Footer */
@@ -784,6 +878,11 @@
             .features-grid {
                 grid-template-columns: 1fr;
             }
+
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
         }
 
         /* Scroll animations */
@@ -794,6 +893,48 @@
 
         .scroll-animate.animated {
             animation: slideInUp 0.8s ease forwards;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 0.8rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--primary) transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
@@ -824,19 +965,19 @@
                 <h1>🔬 AI Microscope</h1>
                 <p>Next-generation visualization and analysis platform powered by artificial intelligence</p>
                 <div class="stats-container">
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="showStatDetail('HTML')">
                         <div class="stat-value">78.1%</div>
                         <div class="stat-label">HTML5</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="showStatDetail('TeX')">
                         <div class="stat-value">18.1%</div>
                         <div class="stat-label">TeX</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="showStatDetail('Python')">
                         <div class="stat-value">3.8%</div>
                         <div class="stat-label">Python</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="showStatDetail('Size')">
                         <div class="stat-value">220K</div>
                         <div class="stat-label">Size</div>
                     </div>
@@ -875,6 +1016,9 @@
                     <a href="https://github.com/DMB13/AI_MICROSCOPE-main" target="_blank" class="btn btn-primary">
                         <i class="fab fa-github"></i> Visit Repository
                     </a>
+                    <button class="btn btn-secondary btn-small" onclick="copyToClipboard('DMB13/AI_MICROSCOPE-main')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
                 </div>
             </div>
 
@@ -883,19 +1027,34 @@
                 <h2><i class="fas fa-code"></i> Language Composition</h2>
                 <div class="language-chart">
                     <div class="language-item">
-                        <div class="language-name">HTML</div>
+                        <div class="language-name">
+                            <span class="tooltip">
+                                HTML
+                                <span class="tooltiptext">Frontend markup and structure</span>
+                            </span>
+                        </div>
                         <div class="language-bar">
                             <div class="language-fill html-fill">78.1%</div>
                         </div>
                     </div>
                     <div class="language-item">
-                        <div class="language-name">TeX</div>
+                        <div class="language-name">
+                            <span class="tooltip">
+                                TeX
+                                <span class="tooltiptext">Documentation and reports</span>
+                            </span>
+                        </div>
                         <div class="language-bar">
                             <div class="language-fill tex-fill">18.1%</div>
                         </div>
                     </div>
                     <div class="language-item">
-                        <div class="language-name">Python</div>
+                        <div class="language-name">
+                            <span class="tooltip">
+                                Python
+                                <span class="tooltiptext">Backend and AI logic</span>
+                            </span>
+                        </div>
                         <div class="language-bar">
                             <div class="language-fill python-fill">3.8%</div>
                         </div>
@@ -907,12 +1066,12 @@
             <div class="card">
                 <h2><i class="fas fa-wrench"></i> Tech Stack</h2>
                 <div style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
-                    <span class="badge"><i class="fab fa-html5"></i> HTML5</span>
-                    <span class="badge"><i class="fab fa-css3"></i> CSS3</span>
-                    <span class="badge"><i class="fab fa-js"></i> JavaScript</span>
-                    <span class="badge"><i class="fab fa-python"></i> Python</span>
-                    <span class="badge">TeX/LaTeX</span>
-                    <span class="badge"><i class="fab fa-github"></i> Git</span>
+                    <span class="badge" onclick="showTechDetail('HTML5')"><i class="fab fa-html5"></i> HTML5</span>
+                    <span class="badge" onclick="showTechDetail('CSS3')"><i class="fab fa-css3"></i> CSS3</span>
+                    <span class="badge" onclick="showTechDetail('JavaScript')"><i class="fab fa-js"></i> JavaScript</span>
+                    <span class="badge" onclick="showTechDetail('Python')"><i class="fab fa-python"></i> Python</span>
+                    <span class="badge" onclick="showTechDetail('TensorFlow')">TensorFlow</span>
+                    <span class="badge" onclick="showTechDetail('Git')"><i class="fab fa-github"></i> Git</span>
                 </div>
             </div>
         </div>
@@ -921,32 +1080,32 @@
         <div class="card" id="features" style="margin-bottom: 3rem;">
             <h2><i class="fas fa-star"></i> Key Features</h2>
             <div class="features-grid">
-                <div class="feature-box">
+                <div class="feature-box" onclick="showFeatureDetail('AI Analysis')">
                     <div class="feature-icon">🎯</div>
                     <div class="feature-title">AI-Powered Analysis</div>
                     <div class="feature-desc">Advanced algorithms for microscopic image analysis and pattern recognition with high accuracy</div>
                 </div>
-                <div class="feature-box">
+                <div class="feature-box" onclick="showFeatureDetail('Visualization')">
                     <div class="feature-icon">📊</div>
                     <div class="feature-title">Data Visualization</div>
                     <div class="feature-desc">Interactive dashboards with real-time visual representations of analysis results</div>
                 </div>
-                <div class="feature-box">
+                <div class="feature-box" onclick="showFeatureDetail('Performance')">
                     <div class="feature-icon">⚡</div>
                     <div class="feature-title">Real-time Processing</div>
                     <div class="feature-desc">Lightning-fast processing of large microscopic datasets with optimized performance</div>
                 </div>
-                <div class="feature-box">
+                <div class="feature-box" onclick="showFeatureDetail('Security')">
                     <div class="feature-icon">🔐</div>
                     <div class="feature-title">Secure & Reliable</div>
                     <div class="feature-desc">Built with enterprise-grade security and comprehensive error handling mechanisms</div>
                 </div>
-                <div class="feature-box">
+                <div class="feature-box" onclick="showFeatureDetail('Documentation')">
                     <div class="feature-icon">📚</div>
                     <div class="feature-title">Full Documentation</div>
                     <div class="feature-desc">Comprehensive TeX documentation and detailed code comments for easy understanding</div>
                 </div>
-                <div class="feature-box">
+                <div class="feature-box" onclick="showFeatureDetail('Interface')">
                     <div class="feature-icon">🌐</div>
                     <div class="feature-title">Web Interface</div>
                     <div class="feature-desc">Accessible through modern browsers with responsive design for all devices</div>
@@ -961,9 +1120,12 @@
                 <div class="progress-item">
                     <div class="progress-label">
                         <span>🎨 Frontend Development</span>
-                        <span>80%</span>
+                        <span class="tooltip">
+                            80%
+                            <span class="tooltiptext">UI/UX implementation complete</span>
+                        </span>
                     </div>
-                    <div class="progress-bar">
+                    <div class="progress-bar" onclick="showProgressDetail('Frontend')">
                         <div class="progress-fill" style="width: 80%;"></div>
                     </div>
                 </div>
@@ -972,7 +1134,7 @@
                         <span>⚙️ Backend Integration</span>
                         <span>65%</span>
                     </div>
-                    <div class="progress-bar">
+                    <div class="progress-bar" onclick="showProgressDetail('Backend')">
                         <div class="progress-fill" style="width: 65%;"></div>
                     </div>
                 </div>
@@ -981,7 +1143,7 @@
                         <span>🤖 AI Model Training</span>
                         <span>70%</span>
                     </div>
-                    <div class="progress-bar">
+                    <div class="progress-bar" onclick="showProgressDetail('AI')">
                         <div class="progress-fill" style="width: 70%;"></div>
                     </div>
                 </div>
@@ -990,7 +1152,7 @@
                         <span>📖 Documentation</span>
                         <span>75%</span>
                     </div>
-                    <div class="progress-bar">
+                    <div class="progress-bar" onclick="showProgressDetail('Documentation')">
                         <div class="progress-fill" style="width: 75%;"></div>
                     </div>
                 </div>
@@ -999,7 +1161,7 @@
                         <span>✅ Testing & QA</span>
                         <span>60%</span>
                     </div>
-                    <div class="progress-bar">
+                    <div class="progress-bar" onclick="showProgressDetail('Testing')">
                         <div class="progress-fill" style="width: 60%;"></div>
                     </div>
                 </div>
@@ -1010,7 +1172,7 @@
         <div class="card" id="roadmap" style="margin-bottom: 3rem;">
             <h2><i class="fas fa-road"></i> Project Roadmap</h2>
             <div class="timeline">
-                <div class="timeline-item">
+                <div class="timeline-item" onclick="showPhaseDetail('Phase1')">
                     <div class="timeline-date">✓ Phase 1: Foundation (Completed)</div>
                     <div class="timeline-content">
                         ✓ Project setup and architecture design<br>
@@ -1018,7 +1180,7 @@
                         ✓ Initial comprehensive documentation in TeX
                     </div>
                 </div>
-                <div class="timeline-item">
+                <div class="timeline-item" onclick="showPhaseDetail('Phase2')">
                     <div class="timeline-date">→ Phase 2: Development (Current)</div>
                     <div class="timeline-content">
                         → Advanced frontend features and UI/UX enhancements<br>
@@ -1026,7 +1188,7 @@
                         → AI model integration and optimization
                     </div>
                 </div>
-                <div class="timeline-item">
+                <div class="timeline-item" onclick="showPhaseDetail('Phase3')">
                     <div class="timeline-date">📋 Phase 3: Optimization (Upcoming)</div>
                     <div class="timeline-content">
                         📋 Performance optimization and speed improvements<br>
@@ -1034,7 +1196,7 @@
                         📋 Comprehensive testing and quality assurance
                     </div>
                 </div>
-                <div class="timeline-item">
+                <div class="timeline-item" onclick="showPhaseDetail('Phase4')">
                     <div class="timeline-date">🚀 Phase 4: Release (Future)</div>
                     <div class="timeline-content">
                         🚀 Beta testing with stakeholders and feedback collection<br>
@@ -1057,7 +1219,108 @@
         </p>
     </div>
 
+    <!-- Modals -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle" style="color: var(--primary); margin-bottom: 1rem;"></h2>
+            <p id="modalContent" style="color: var(--text-secondary); line-height: 1.8;"></p>
+            <button class="btn btn-primary" onclick="closeModal()" style="margin-top: 1.5rem;">Close</button>
+        </div>
+    </div>
+
     <script>
+        // Modal functions
+        function showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalContent').textContent = content;
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        // Stat detail handler
+        function showStatDetail(stat) {
+            const details = {
+                'HTML': 'HTML (78.1%) - Frontend markup and structure for the web-based dashboard and user interface components.',
+                'TeX': 'TeX/LaTeX (18.1%) - Comprehensive documentation, technical reports, and scientific papers.',
+                'Python': 'Python (3.8%) - Backend logic, AI model inference, and data processing utilities.',
+                'Size': 'Repository Size: 220KB - Optimized project structure with efficient resource management.'
+            };
+            showModal(`${stat} Composition`, details[stat] || 'Details coming soon');
+        }
+
+        // Technology detail handler
+        function showTechDetail(tech) {
+            const details = {
+                'HTML5': 'Modern HTML5 markup providing semantic structure and accessibility features for the web platform.',
+                'CSS3': 'Advanced CSS3 with gradients, animations, and responsive design for modern UI/UX.',
+                'JavaScript': 'Client-side JavaScript enabling interactive features, modals, and smooth animations.',
+                'Python': 'Python backend with TensorFlow for AI inference and data processing capabilities.',
+                'TensorFlow': 'Deep learning framework (TensorFlow 2.18.1 with Keras 3.x) powering the AI model.',
+                'Git': 'Version control system for collaborative development and project management.'
+            };
+            showModal(`${tech}`, details[tech] || 'Details coming soon');
+        }
+
+        // Feature detail handler
+        function showFeatureDetail(feature) {
+            const details = {
+                'AI Analysis': 'Our AI-powered analysis uses EfficientNetV2M deep learning model trained on the DiBaS dataset to identify 34 bacterial species with high accuracy and confidence scoring.',
+                'Visualization': 'Interactive dashboards display real-time analysis results, confidence metrics, and Grad-CAM heatmaps for visual explainability.',
+                'Performance': 'Optimized inference engine delivers results in under 5 seconds per image, enabling rapid diagnostic workflows.',
+                'Security': 'Enterprise-grade security with offline inference, secure patient data handling, and comprehensive audit trails.',
+                'Documentation': 'Complete technical documentation in TeX format, user guides, API documentation, and deployment guides.',
+                'Interface': 'Responsive web interface accessible on desktop, tablet, and mobile devices with modern UI conventions.'
+            };
+            showModal(`✨ ${feature}`, details[feature] || 'Details coming soon');
+        }
+
+        // Progress detail handler
+        function showProgressDetail(category) {
+            const details = {
+                'Frontend': 'Frontend Development (80%) - Core UI components, responsive design, and interactive features are complete. Final polish and optimization in progress.',
+                'Backend': 'Backend Integration (65%) - API endpoints and service layer under development. Database integration and inference engine integration ongoing.',
+                'AI': 'AI Model Training (70%) - Model training on DiBaS dataset complete. Fine-tuning for clinical validation and performance optimization in progress.',
+                'Documentation': 'Documentation (75%) - Comprehensive user guides, API documentation, and deployment guides nearly complete. Final reviews and updates pending.',
+                'Testing': 'Testing & QA (60%) - Unit testing and integration testing in progress. System-level testing and clinical validation upcoming.'
+            };
+            showModal(`📈 ${category}`, details[category] || 'Details coming soon');
+        }
+
+        // Phase detail handler
+        function showPhaseDetail(phase) {
+            const details = {
+                'Phase1': 'Phase 1 - Foundation: Successfully completed project setup, architecture design, basic HTML structure with responsive styling, and initial TeX documentation.',
+                'Phase2': 'Phase 2 - Development (Current): Implementing advanced frontend features, Python backend services, and AI model integration for production readiness.',
+                'Phase3': 'Phase 3 - Optimization: Focus on performance tuning, UX/accessibility improvements, and comprehensive testing across all modules.',
+                'Phase4': 'Phase 4 - Release: Beta testing with stakeholders, final documentation updates, and public release with long-term support plans.'
+            };
+            showModal(`🗺️ ${phase}`, details[phase] || 'Details coming soon');
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('Copied to clipboard!');
+            });
+        }
+
+        // Notification system
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.3s ease reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
         // Smooth scroll navigation
         function scrollToSection(id) {
             const element = document.getElementById(id);
@@ -1065,6 +1328,13 @@
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
+
+        // Close modal on background click
+        document.getElementById('detailModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
 
         // Intersection Observer for animations
         const observerOptions = {
@@ -1081,7 +1351,6 @@
             });
         }, observerOptions);
 
-        // Observe elements for animation
         document.querySelectorAll('.card, .feature-box, .progress-item, .timeline-item').forEach(el => {
             el.classList.add('scroll-animate');
             observer.observe(el);
@@ -1108,31 +1377,15 @@
             }
         });
 
-        // Counter animation for stats
-        function animateCounter(element, target, duration = 2000) {
-            let current = 0;
-            const increment = target / (duration / 50);
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    element.textContent = target + '%';
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(current) + '%';
-                }
-            }, 50);
-        }
-
-        // Animate counters on page load
-        window.addEventListener('load', () => {
-            document.querySelectorAll('.progress-fill').forEach(fill => {
-                const width = fill.style.width;
-                fill.style.width = '0';
-                setTimeout(() => {
-                    fill.style.width = width;
-                }, 100);
-            });
+        // Easter egg
+        document.addEventListener('keydown', function(event) {
+            if (event.key === '?' || event.key === '/') {
+                showNotification('✨ Welcome to AI Microscope! Explore the interactive elements throughout the page.');
+            }
         });
+
+        console.log('%c🔬 AI Microscope Dashboard', 'font-size: 20px; color: #667eea; font-weight: bold;');
+        console.log('%cBuilt with passion for healthcare innovation', 'color: #764ba2; font-size: 14px;');
     </script>
 </body>
 </html>
